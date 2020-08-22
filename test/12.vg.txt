@@ -1,0 +1,8 @@
+// -*- mode: javascript -*-
+
+func main() {
+  // *, neq
+  var a;
+  a = 2 * 3;
+  a = 4 != 5;
+}

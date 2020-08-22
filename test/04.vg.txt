@@ -1,0 +1,9 @@
+// -*- mode: javascript -*-
+
+func main() {
+  // comment in func
+  var a;
+  var b = 1;
+
+  return 42;
+}

@@ -2,7 +2,7 @@
 
 func add(a, b) {
   var c;
-  c = a + b;
+  set c = a + b;
   return c;
 }
 

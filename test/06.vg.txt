@@ -7,7 +7,7 @@ func sub() {
 func main() {
   // comment in func
   var a;
-  a = 2;
+  set a = 2;
   var b = 1;
   call sub();
 

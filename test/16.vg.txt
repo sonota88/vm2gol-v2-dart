@@ -3,7 +3,7 @@
 func to_vi(w, x, y, offset) {
   var vi; // vram index
 
-  vi = 
+  set vi = 
     ((y * w) + x)
     +
     offset
@@ -15,13 +15,13 @@ func to_vi(w, x, y, offset) {
 func vram_set(w, x, y, val) {
   var vi; // vram index
   call_set vi = to_vi(w, x, y, 0);
-  vram[vi] = val;
+  set vram[vi] = val;
 }
 
 func vram_set_buf(w, x, y, val) {
   var vi; // vram index
   call_set  vi = to_vi(w, x, y, 25);
-  vram[vi] = val;
+  set vram[vi] = val;
 }
 
 func vram_get(w, x, y) {
@@ -36,15 +36,15 @@ func adjust_index(width, i) {
   case {
     (i == -1) {
       _cmt("下限を超えた場合");
-      adjusted = width + -1;
+      set adjusted = width + -1;
     }
     (i == width) {
       _cmt("上限を超えた場合");
-      adjusted = 0;
+      set adjusted = 0;
     }
     (1 == 1) {
       _cmt("補正が不要な場合");
-     adjusted = i;
+     set adjusted = i;
     }
   }
 
@@ -59,17 +59,17 @@ func calc_next_gen(current_val, count) {
     (current_val == 0) {
       case {
         (count == 3) {
-          next_val = 1;
+          set next_val = 1;
         }
       }
     }
     (0 == 0) {
       case {
         (count == 2) {
-          next_val = 1;
+          set next_val = 1;
         }
         (count == 3) {
-          next_val = 1;
+          set next_val = 1;
         }
       }
     }
@@ -108,35 +108,35 @@ func count_alive(w, h, x, y) {
 
   _cmt("左上");
   call_set tmp = vram_get(w, xl, yt);
-  count = count + tmp;
+  set count = count + tmp;
 
   _cmt("上");
   call_set tmp = vram_get(w, x, yt);
-  count = count + tmp;
+  set count = count + tmp;
 
   _cmt("右上");
   call_set tmp = vram_get(w, xr, yt);
-  count = count + tmp;
+  set count = count + tmp;
 
   _cmt("左");
   call_set tmp = vram_get(w, xl, y);
-  count = count + tmp;
+  set count = count + tmp;
 
   _cmt("右");
   call_set tmp = vram_get(w, xr, y);
-  count = count + tmp;
+  set count = count + tmp;
 
   _cmt("左下");
   call_set tmp = vram_get(w, xl, yb);
-  count = count + tmp;
+  set count = count + tmp;
 
   _cmt("下");
   call_set tmp = vram_get(w, x, yb);
-  count = count + tmp;
+  set count = count + tmp;
 
   _cmt("右下");
   call_set tmp = vram_get(w, xr, yb);
-  count = count + tmp;
+  set count = count + tmp;
 
   _cmt("★count_aliveの最後");
 
@@ -154,7 +154,7 @@ func make_next_gen(w, h) {
   var next_val;
 
   while (y != h) {
-    x = 0;
+    set x = 0;
     while (x != w) {
       call_set count = count_alive(w, h, x, y);
       _cmt("★ count_alive から戻った直後");
@@ -170,9 +170,9 @@ func make_next_gen(w, h) {
       call vram_set_buf(w, x, y, next_val);
       _cmt("★ vram_set_buf から戻った直後");
 
-      x = x + 1;
+      set x = x + 1;
     }
-    y = y + 1;
+    set y = y + 1;
   }
 }
 
@@ -183,10 +183,10 @@ func replace_with_buf() {
   var temp;
 
   while (vi != 25) {
-    vi_buf = vi + 25;
-    temp = vram[vi_buf];
-    vram[vi] = temp;
-    vi = vi + 1;
+    set vi_buf = vi + 25;
+    set temp = vram[vi_buf];
+    set vram[vi] = temp;
+    set vi = vi + 1;
   }
 }
 
@@ -206,6 +206,6 @@ func main() {
   while (gen != gen_limit) {
     call make_next_gen(w, h);
     call replace_with_buf();
-    gen = gen + 1;
+    set gen = gen + 1;
   }
 }

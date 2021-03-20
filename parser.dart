@@ -255,23 +255,9 @@ parseExpr() {
   }
 }
 
-// List parseSet() {
-//   consume("set");
+List parseSet() {
+  consume("set");
 
-//   final t = peek();
-//   pos++;
-//   final varName = t.value;
-
-//   consume("=");
-
-//   final expr = parseExpr();
-
-//   consume(";");
-
-//   return ["set", varName, expr];
-// }
-
-List parseSet_v2() {
   final t = peek();
   pos++;
   final varName = t.value;
@@ -413,7 +399,7 @@ List? parseStmt() {
 
   if      (t.value == "func"    ) { return parseFunc();      } 
   else if (t.value == "var"     ) { return parseVar();       }
-  // else if (t.value == "set"     ) { return parseSet();       }
+  else if (t.value == "set"     ) { return parseSet();       }
   else if (t.value == "call"    ) { return parseCall();      }
   else if (t.value == "call_set") { return parseCallSet();   }
   else if (t.value == "return"  ) { return parseReturn();    }
@@ -421,11 +407,7 @@ List? parseStmt() {
   else if (t.value == "case"    ) { return parseCase();      }
   else if (t.value == "_cmt"    ) { return parseVmComment(); }
   else {
-    if (t.type == "ident") {
-      return parseSet_v2();
-    } else {
-      throw notYetImpl([ t ]);
-    }
+    throw notYetImpl([ t ]);
   }
 }
 

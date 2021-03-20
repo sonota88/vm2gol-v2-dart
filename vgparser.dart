@@ -24,11 +24,11 @@ toTokens(src) {
       break;
     }
     final re = new RegExp(r'^(.+)<(.+)>$');
-    final m = re.firstMatch(line);
+    final RegExpMatch m = re.firstMatch(line)!;
 
-    final type = m.group(1);
+    final String type = m.group(1)!;
 
-    final g2 = m.group(2);
+    final String g2 = m.group(2)!;
     var value;
     if (type == "int") {
       value = int.parse(g2);
@@ -352,7 +352,7 @@ List parseWhile() {
   return ["while", expr, stmts];
 }
 
-List _parseWhenClause() {
+List? _parseWhenClause() {
   Token t = peek();
   if (t.value == "}") {
     return null;
@@ -404,7 +404,7 @@ List parseVmComment() {
   return ["_cmt", comment];
 }
 
-List parseStmt() {
+List? parseStmt() {
   final t = peek();
 
   if (t.value == "}") {

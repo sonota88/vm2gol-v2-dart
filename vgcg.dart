@@ -307,7 +307,7 @@ List codegenCallSet(fnArgNames, lvarNames, stmtRest) {
   return alines;
 }
 
-String _matchVramRef_index(val) {
+String? _matchVramRef_index(val) {
   final re = new RegExp(r'^vram\[(\d+)\]');
 
   final m = re.firstMatch(val);
@@ -318,7 +318,7 @@ String _matchVramRef_index(val) {
   return m.group(1);
 }
 
-String _matchVramRef_ident(val) {
+String? _matchVramRef_ident(val) {
   final re = new RegExp(r'^vram\[([a-z0-9_]+)\]');
 
   final m = re.firstMatch(val);

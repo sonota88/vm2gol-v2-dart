@@ -2,5 +2,6 @@
 https://memo88.hatenablog.com/entry/2020/08/22/162201
 
 ```
-Dart SDK version: 2.9.1 (stable) (Unknown timestamp) on "linux_x64"
+$ dart --version
+Dart SDK version: 2.12.0 (stable) (Unknown timestamp) on "linux_x64"
 ```

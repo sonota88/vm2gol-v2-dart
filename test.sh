@@ -37,7 +37,7 @@ test_nn() {
     return
   fi
 
-  cat $temp_vgt_file | dart vgcg.dart > $temp_vga_file
+  cat $temp_vgt_file | dart codegen.dart > $temp_vga_file
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_codegen"
     return

@@ -173,21 +173,23 @@ List genVar(fnArgNames, lvarNames, stmtRest) {
 List _genCall_pushFnArg(fnArgNames, lvarNames, fnArg) {
   var alines = [];
 
+  final pushArg;
+
   if (fnArg is int) {
-    alines.add("  push ${fnArg}");
+    pushArg = fnArg;
   } else if (fnArg is String) {
     if (fnArgNames.contains(fnArg)) {
-      final ref = toFnArgRef(fnArgNames, fnArg);
-      alines.add("  push ${ref}");
+      pushArg = toFnArgRef(fnArgNames, fnArg);
     } else if (lvarNames.contains(fnArg)) {
-      final ref = toLvarRef(lvarNames, fnArg);
-      alines.add("  push ${ref}");
+      pushArg = toLvarRef(lvarNames, fnArg);
     } else {
       throw notYetImpl([ fnArg ]);
     }
   } else {
     throw notYetImpl([ fnArg ]);
   }
+
+  alines.add("  push ${pushArg}");
 
   return alines;
 }

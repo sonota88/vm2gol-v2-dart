@@ -458,13 +458,6 @@ List genStmt(fnArgNames, lvarNames, stmt) {
   } else if (stmtHead == "call_set") {
     alines += genCallSet(fnArgNames, lvarNames, stmtRest);
 
-  } else if (stmtHead == "var") {
-    lvarNames.add(stmtRest[0]);
-    alines.add("  sub_sp 1");
-    if (stmtRest.length == 2) {
-      alines += genSet(fnArgNames, lvarNames, stmtRest);
-    }
-
   } else if (stmtHead == "set") {
     alines += genSet(fnArgNames, lvarNames, stmtRest);
 
@@ -517,7 +510,18 @@ List genFuncDef(rest) {
 
   final lvarNames = [];
 
-  alines += genStmts(fnArgNames, lvarNames, body);
+  body.forEach((stmt){
+      final stmtRest = getRest(stmt);
+      if (stmt[0] == "var") {
+        lvarNames.add(stmtRest[0]);
+        alines.add("  sub_sp 1");
+        if (stmtRest.length == 2) {
+          alines += genSet(fnArgNames, lvarNames, stmtRest);
+        }
+      } else {
+        alines += genStmt(fnArgNames, lvarNames, stmt);
+      }
+  });
 
   alines.add("");
   alines.add("  cp bp sp");

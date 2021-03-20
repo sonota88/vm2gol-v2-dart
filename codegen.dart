@@ -28,7 +28,7 @@ toLvarRef(lvarNames, lvarName) {
   return "[bp-${ i + 1 }]";
 }
 
-List _codegenExp_push(fnArgNames, lvarNames, val) {
+List _genExp_push(fnArgNames, lvarNames, val) {
   var alines = [];
 
   var pushArg;
@@ -44,7 +44,7 @@ List _codegenExp_push(fnArgNames, lvarNames, val) {
       throw notYetImpl([ val ]);
     }
   } else if (val is List) {
-    alines += codegenExp(fnArgNames, lvarNames, val);
+    alines += genExp(fnArgNames, lvarNames, val);
     pushArg = "reg_a";
   } else {
     throw notYetImpl([ val ]);
@@ -55,7 +55,7 @@ List _codegenExp_push(fnArgNames, lvarNames, val) {
   return alines;
 }
 
-List _codegenExp_add() {
+List _genExp_add() {
   var alines = [];
 
   alines.add("  pop reg_b");
@@ -65,7 +65,7 @@ List _codegenExp_add() {
   return alines;
 }
 
-List _codegenExp_mult() {
+List _genExp_mult() {
   var alines = [];
 
   alines.add("  pop reg_b");
@@ -75,7 +75,7 @@ List _codegenExp_mult() {
   return alines;
 }
 
-List _codegenExp_eq() {
+List _genExp_eq() {
   final alines = [];
 
   globalLabelId++;
@@ -100,7 +100,7 @@ List _codegenExp_eq() {
   return alines;
 }
 
-List _codegenExp_neq() {
+List _genExp_neq() {
   final alines = [];
 
   globalLabelId++;
@@ -125,7 +125,7 @@ List _codegenExp_neq() {
   return alines;
 }
 
-List codegenExp(fnArgNames, lvarNames, exp) {
+List genExp(fnArgNames, lvarNames, exp) {
   var alines = [];
 
   final op = exp[0];
@@ -134,17 +134,17 @@ List codegenExp(fnArgNames, lvarNames, exp) {
   final argL = args[0];
   final argR = args[1];
 
-  alines += _codegenExp_push(fnArgNames, lvarNames, argL);
-  alines += _codegenExp_push(fnArgNames, lvarNames, argR);
+  alines += _genExp_push(fnArgNames, lvarNames, argL);
+  alines += _genExp_push(fnArgNames, lvarNames, argR);
 
   if (op == "+") {
-    alines += _codegenExp_add();
+    alines += _genExp_add();
   } else if (op == "*") {
-    alines += _codegenExp_mult();
+    alines += _genExp_mult();
   } else if (op == "eq") {
-    alines += _codegenExp_eq();
+    alines += _genExp_eq();
   } else if (op == "neq") {
-    alines += _codegenExp_neq();
+    alines += _genExp_neq();
   } else {
     throw notYetImpl([ op ]);
   }
@@ -152,7 +152,7 @@ List codegenExp(fnArgNames, lvarNames, exp) {
   return alines;
 }
 
-List _codegenCall_pushFnArg(fnArgNames, lvarNames, fnArg) {
+List _genCall_pushFnArg(fnArgNames, lvarNames, fnArg) {
   var alines = [];
 
   if (fnArg is int) {
@@ -174,26 +174,26 @@ List _codegenCall_pushFnArg(fnArgNames, lvarNames, fnArg) {
   return alines;
 }
 
-List codegenCall(fnArgNames, lvarNames, stmtRest) {
+List genCall(fnArgNames, lvarNames, stmtRest) {
   var alines = [];
 
   final fnName = stmtRest[0];
   final fnArgs = getRest(stmtRest);
 
   fnArgs.reversed.forEach((fnArg){
-      alines += _codegenCall_pushFnArg(
+      alines += _genCall_pushFnArg(
         fnArgNames, lvarNames, fnArg
       );
   });
 
-  alines += codegenVmComment("call  ${fnName}");
+  alines += genVmComment("call  ${fnName}");
   alines.add("  call ${fnName}");
   alines.add("  add_sp ${fnArgs.length}");
 
   return alines;
 }
 
-List codegenCallSet(fnArgNames, lvarNames, stmtRest) {
+List genCallSet(fnArgNames, lvarNames, stmtRest) {
   var alines = [];
 
   final lvarName = stmtRest[0];
@@ -203,12 +203,12 @@ List codegenCallSet(fnArgNames, lvarNames, stmtRest) {
   final fnArgs = getRest(fnTemp);
 
   fnArgs.reversed.forEach((fnArg){
-      alines += _codegenCall_pushFnArg(
+      alines += _genCall_pushFnArg(
         fnArgNames, lvarNames, fnArg
       );
   });
 
-  alines += codegenVmComment("call_set  ${fnName}");
+  alines += genVmComment("call_set  ${fnName}");
   alines.add("  call ${fnName}");
   alines.add("  add_sp ${fnArgs.length}");
 
@@ -240,7 +240,7 @@ String? _matchVramRef_ident(val) {
   return m.group(1);
 }
 
-List _codegenSet_set(lvarNames, srcVal, dest) {
+List _genSet_set(lvarNames, srcVal, dest) {
   var alines = [];
 
   if (_matchVramRef_index(dest) != null) {
@@ -262,7 +262,7 @@ List _codegenSet_set(lvarNames, srcVal, dest) {
   return alines;
 }
 
-List codegenSet(fnArgNames, lvarNames, rest) {
+List genSet(fnArgNames, lvarNames, rest) {
   var alines = [];
   final dest = rest[0];
   final exp = rest[1];
@@ -294,18 +294,18 @@ List codegenSet(fnArgNames, lvarNames, rest) {
       throw notYetImpl([ exp ]);
     }
   } else if (exp is List) {
-    alines += codegenExp(fnArgNames, lvarNames, exp);
+    alines += genExp(fnArgNames, lvarNames, exp);
     srcVal = "reg_a";
   } else {
     throw notYetImpl([ exp ]);
   }
 
-  alines += _codegenSet_set(lvarNames, srcVal, dest);
+  alines += _genSet_set(lvarNames, srcVal, dest);
 
   return alines;
 }
 
-List codegenReturn(lvarNames, stmtRest) {
+List genReturn(lvarNames, stmtRest) {
   var alines = [];
 
   final retval = stmtRest[0];
@@ -338,7 +338,7 @@ List codegenReturn(lvarNames, stmtRest) {
   return alines;
 }
 
-List codegenWhile(fnArgNames, lvarNames, rest) {
+List genWhile(fnArgNames, lvarNames, rest) {
   var alines = [];
   final condExp = rest[0];
   final body = rest[1];
@@ -352,7 +352,7 @@ List codegenWhile(fnArgNames, lvarNames, rest) {
   alines.add("label while_${labelId}");
 
   // 条件の評価
-  alines += codegenExp(fnArgNames, lvarNames, condExp);
+  alines += genExp(fnArgNames, lvarNames, condExp);
 
   // 比較対象の値（真）をセット
   alines.add("  set_reg_b 1");
@@ -367,7 +367,7 @@ List codegenWhile(fnArgNames, lvarNames, rest) {
   alines.add("label true_${labelId}");
 
   // ループの本体
-  alines += codegenStmts(fnArgNames, lvarNames, body);
+  alines += genStmts(fnArgNames, lvarNames, body);
 
   // ループの先頭に戻る
   alines.add("  jump while_${labelId}");
@@ -378,7 +378,7 @@ List codegenWhile(fnArgNames, lvarNames, rest) {
   return alines;
 }
 
-List codegenCase(fnArgNames, lvarNames, whenBlocks) {
+List genCase(fnArgNames, lvarNames, whenBlocks) {
   var alines = [];
 
   globalLabelId++;
@@ -399,7 +399,7 @@ List codegenCase(fnArgNames, lvarNames, whenBlocks) {
       alines.add("  # 条件 ${labelId}_${whenIdx}: ${inspect(cond)}");
 
       if (condHead == "eq") {
-        alines += codegenExp(fnArgNames, lvarNames, cond);
+        alines += genExp(fnArgNames, lvarNames, cond);
 
         alines.add("  set_reg_b 1");
 
@@ -408,7 +408,7 @@ List codegenCase(fnArgNames, lvarNames, whenBlocks) {
 
         var thenAlines = [];
         thenAlines.add("label when_${labelId}_${whenIdx}");
-        thenAlines += codegenStmts(fnArgNames, lvarNames, rest);
+        thenAlines += genStmts(fnArgNames, lvarNames, rest);
         thenAlines.add("  jump end_case_${labelId}");
         thenBodies.add(thenAlines);
       } else {
@@ -427,13 +427,13 @@ List codegenCase(fnArgNames, lvarNames, whenBlocks) {
   return alines;
 }
 
-List codegenVmComment(comment) {
+List genVmComment(comment) {
   return [
     "  _cmt " + comment.replaceAll(" ", "~")
   ];
 }
 
-List codegenStmts(fnArgNames, lvarNames, stmts) {
+List genStmts(fnArgNames, lvarNames, stmts) {
   var alines = [];
 
   var stmtHead;
@@ -444,32 +444,32 @@ List codegenStmts(fnArgNames, lvarNames, stmts) {
       stmtRest = getRest(stmt);
 
       if (stmtHead == "call") {
-        alines += codegenCall(fnArgNames, lvarNames, stmtRest);
+        alines += genCall(fnArgNames, lvarNames, stmtRest);
 
       } else if (stmtHead == "call_set") {
-        alines += codegenCallSet(fnArgNames, lvarNames, stmtRest);
+        alines += genCallSet(fnArgNames, lvarNames, stmtRest);
 
       } else if (stmtHead == "var") {
         lvarNames.add(stmtRest[0]);
         alines.add("  sub_sp 1");
         if (stmtRest.length == 2) {
-          alines += codegenSet(fnArgNames, lvarNames, stmtRest);
+          alines += genSet(fnArgNames, lvarNames, stmtRest);
         }
 
       } else if (stmtHead == "set") {
-        alines += codegenSet(fnArgNames, lvarNames, stmtRest);
+        alines += genSet(fnArgNames, lvarNames, stmtRest);
 
       } else if (stmtHead == "return") {
-        alines += codegenReturn(lvarNames, stmtRest);
+        alines += genReturn(lvarNames, stmtRest);
 
       } else if (stmtHead == "case") {
-        alines += codegenCase(fnArgNames, lvarNames, stmtRest);
+        alines += genCase(fnArgNames, lvarNames, stmtRest);
 
       } else if (stmtHead == "while") {
-        alines += codegenWhile(fnArgNames, lvarNames, stmtRest);
+        alines += genWhile(fnArgNames, lvarNames, stmtRest);
 
       } else if (stmtHead == "_cmt") {
-        alines += codegenVmComment(stmtRest[0]);
+        alines += genVmComment(stmtRest[0]);
 
       } else {
         throw notYetImpl([ stmtHead ]);
@@ -479,7 +479,7 @@ List codegenStmts(fnArgNames, lvarNames, stmts) {
   return alines;
 }
 
-List codegenFuncDef(rest) {
+List genFuncDef(rest) {
   var alines = [];
 
   final fnName = rest[0];
@@ -496,7 +496,7 @@ List codegenFuncDef(rest) {
 
   final lvarNames = [];
 
-  alines += codegenStmts(fnArgNames, lvarNames, body);
+  alines += genStmts(fnArgNames, lvarNames, body);
 
   alines.add("");
   alines.add("  cp bp sp");
@@ -506,7 +506,7 @@ List codegenFuncDef(rest) {
   return alines;
 }
 
-List codegenTopStmts(rest) {
+List genTopStmts(rest) {
   var alines = [];
 
   rest.forEach((stmt){
@@ -514,7 +514,7 @@ List codegenTopStmts(rest) {
       final stmtRest = getRest(stmt);
 
       if (stmtHead == "func") {
-        alines += codegenFuncDef(stmtRest);
+        alines += genFuncDef(stmtRest);
       } else {
         throw notYetImpl([stmtHead]);
       }
@@ -532,7 +532,7 @@ List codegen(tree) {
   final head = tree[0];
   final rest = getRest(tree);
 
-  alines += codegenTopStmts(rest);
+  alines += genTopStmts(rest);
 
   return alines;
 }

@@ -28,7 +28,7 @@ toLvarRef(lvarNames, lvarName) {
   return "[bp-${ i + 1 }]";
 }
 
-List _genExp_push(fnArgNames, lvarNames, val) {
+List _genExpr_push(fnArgNames, lvarNames, val) {
   var alines = [];
 
   var pushArg;
@@ -44,7 +44,7 @@ List _genExp_push(fnArgNames, lvarNames, val) {
       throw notYetImpl([ val ]);
     }
   } else if (val is List) {
-    alines += genExp(fnArgNames, lvarNames, val);
+    alines += genExpr(fnArgNames, lvarNames, val);
     pushArg = "reg_a";
   } else {
     throw notYetImpl([ val ]);
@@ -55,7 +55,7 @@ List _genExp_push(fnArgNames, lvarNames, val) {
   return alines;
 }
 
-List _genExp_add() {
+List _genExpr_add() {
   var alines = [];
 
   alines.add("  pop reg_b");
@@ -65,7 +65,7 @@ List _genExp_add() {
   return alines;
 }
 
-List _genExp_mult() {
+List _genExpr_mult() {
   var alines = [];
 
   alines.add("  pop reg_b");
@@ -75,7 +75,7 @@ List _genExp_mult() {
   return alines;
 }
 
-List _genExp_eq() {
+List _genExpr_eq() {
   final alines = [];
 
   globalLabelId++;
@@ -103,7 +103,7 @@ List _genExp_eq() {
   return alines;
 }
 
-List _genExp_neq() {
+List _genExpr_neq() {
   final alines = [];
 
   globalLabelId++;
@@ -131,7 +131,7 @@ List _genExp_neq() {
   return alines;
 }
 
-List genExp(fnArgNames, lvarNames, exp) {
+List genExpr(fnArgNames, lvarNames, exp) {
   var alines = [];
 
   final op = exp[0];
@@ -140,17 +140,17 @@ List genExp(fnArgNames, lvarNames, exp) {
   final argL = args[0];
   final argR = args[1];
 
-  alines += _genExp_push(fnArgNames, lvarNames, argL);
-  alines += _genExp_push(fnArgNames, lvarNames, argR);
+  alines += _genExpr_push(fnArgNames, lvarNames, argL);
+  alines += _genExpr_push(fnArgNames, lvarNames, argR);
 
   if (op == "+") {
-    alines += _genExp_add();
+    alines += _genExpr_add();
   } else if (op == "*") {
-    alines += _genExp_mult();
+    alines += _genExpr_mult();
   } else if (op == "eq") {
-    alines += _genExp_eq();
+    alines += _genExpr_eq();
   } else if (op == "neq") {
-    alines += _genExp_neq();
+    alines += _genExpr_neq();
   } else {
     throw notYetImpl([ op ]);
   }
@@ -312,7 +312,7 @@ List genSet(fnArgNames, lvarNames, rest) {
       throw notYetImpl([ exp ]);
     }
   } else if (exp is List) {
-    alines += genExp(fnArgNames, lvarNames, exp);
+    alines += genExpr(fnArgNames, lvarNames, exp);
     srcVal = "reg_a";
   } else {
     throw notYetImpl([ exp ]);
@@ -374,7 +374,7 @@ List genWhile(fnArgNames, lvarNames, rest) {
   alines.add("label ${labelBegin}");
 
   // 条件の評価
-  alines += genExp(fnArgNames, lvarNames, condExp);
+  alines += genExpr(fnArgNames, lvarNames, condExp);
 
   // 比較対象の値（真）をセット
   alines.add("  set_reg_b 1");
@@ -424,7 +424,7 @@ List genCase(fnArgNames, lvarNames, whenBlocks) {
       alines.add("  # 条件 ${labelId}_${whenIdx}: ${inspect(cond)}");
 
       if (condHead == "eq") {
-        alines += genExp(fnArgNames, lvarNames, cond);
+        alines += genExpr(fnArgNames, lvarNames, cond);
 
         alines.add("  set_reg_b 1");
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
 cat "$1" \
-  | dart vgtokenizer.dart \
+  | dart lexer.dart \
   | dart vgparser.dart \
   | dart vgcg.dart

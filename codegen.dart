@@ -158,6 +158,18 @@ List genExp(fnArgNames, lvarNames, exp) {
   return alines;
 }
 
+List genVar(fnArgNames, lvarNames, stmtRest) {
+  var alines = [];
+
+  alines.add("  sub_sp 1");
+
+  if (stmtRest.length == 2) {
+    alines += genSet(fnArgNames, lvarNames, stmtRest);
+  }
+
+  return alines;
+}
+
 List _genCall_pushFnArg(fnArgNames, lvarNames, fnArg) {
   var alines = [];
 
@@ -514,10 +526,7 @@ List genFuncDef(rest) {
       final stmtRest = getRest(stmt);
       if (stmt[0] == "var") {
         lvarNames.add(stmtRest[0]);
-        alines.add("  sub_sp 1");
-        if (stmtRest.length == 2) {
-          alines += genSet(fnArgNames, lvarNames, stmtRest);
-        }
+        alines += genVar(fnArgNames, lvarNames, stmtRest);
       } else {
         alines += genStmt(fnArgNames, lvarNames, stmt);
       }

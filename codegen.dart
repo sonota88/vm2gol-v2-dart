@@ -446,6 +446,47 @@ List genVmComment(comment) {
   ];
 }
 
+List genStmt(fnArgNames, lvarNames, stmt) {
+  var alines = [];
+
+  final stmtHead = stmt[0];
+  final stmtRest = getRest(stmt);
+
+  if (stmtHead == "call") {
+    alines += genCall(fnArgNames, lvarNames, stmtRest);
+
+  } else if (stmtHead == "call_set") {
+    alines += genCallSet(fnArgNames, lvarNames, stmtRest);
+
+  } else if (stmtHead == "var") {
+    lvarNames.add(stmtRest[0]);
+    alines.add("  sub_sp 1");
+    if (stmtRest.length == 2) {
+      alines += genSet(fnArgNames, lvarNames, stmtRest);
+    }
+
+  } else if (stmtHead == "set") {
+    alines += genSet(fnArgNames, lvarNames, stmtRest);
+
+  } else if (stmtHead == "return") {
+    alines += genReturn(lvarNames, stmtRest);
+
+  } else if (stmtHead == "case") {
+    alines += genCase(fnArgNames, lvarNames, stmtRest);
+
+  } else if (stmtHead == "while") {
+    alines += genWhile(fnArgNames, lvarNames, stmtRest);
+
+  } else if (stmtHead == "_cmt") {
+    alines += genVmComment(stmtRest[0]);
+
+  } else {
+    throw notYetImpl([ stmtHead ]);
+  }
+
+  return alines;
+}
+
 List genStmts(fnArgNames, lvarNames, stmts) {
   var alines = [];
 
@@ -453,40 +494,7 @@ List genStmts(fnArgNames, lvarNames, stmts) {
   var stmtRest;
 
   stmts.forEach((stmt){
-      stmtHead = stmt[0];
-      stmtRest = getRest(stmt);
-
-      if (stmtHead == "call") {
-        alines += genCall(fnArgNames, lvarNames, stmtRest);
-
-      } else if (stmtHead == "call_set") {
-        alines += genCallSet(fnArgNames, lvarNames, stmtRest);
-
-      } else if (stmtHead == "var") {
-        lvarNames.add(stmtRest[0]);
-        alines.add("  sub_sp 1");
-        if (stmtRest.length == 2) {
-          alines += genSet(fnArgNames, lvarNames, stmtRest);
-        }
-
-      } else if (stmtHead == "set") {
-        alines += genSet(fnArgNames, lvarNames, stmtRest);
-
-      } else if (stmtHead == "return") {
-        alines += genReturn(lvarNames, stmtRest);
-
-      } else if (stmtHead == "case") {
-        alines += genCase(fnArgNames, lvarNames, stmtRest);
-
-      } else if (stmtHead == "while") {
-        alines += genWhile(fnArgNames, lvarNames, stmtRest);
-
-      } else if (stmtHead == "_cmt") {
-        alines += genVmComment(stmtRest[0]);
-
-      } else {
-        throw notYetImpl([ stmtHead ]);
-      }
+      alines += genStmt(fnArgNames, lvarNames, stmt);
   });
 
   return alines;

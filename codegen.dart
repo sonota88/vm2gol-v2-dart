@@ -478,11 +478,11 @@ List genStmt(fnArgNames, lvarNames, stmt) {
   } else if (stmtHead == "return") {
     alines += genReturn(lvarNames, stmtRest);
 
-  } else if (stmtHead == "case") {
-    alines += genCase(fnArgNames, lvarNames, stmtRest);
-
   } else if (stmtHead == "while") {
     alines += genWhile(fnArgNames, lvarNames, stmtRest);
+
+  } else if (stmtHead == "case") {
+    alines += genCase(fnArgNames, lvarNames, stmtRest);
 
   } else if (stmtHead == "_cmt") {
     alines += genVmComment(stmtRest[0]);

@@ -35,11 +35,11 @@ void main() {
       pos += str.length;
     } else if (_matchString(rest) != null) {
       final str = _matchString(rest)!;
-      tokens.add(new Token("string", str));
+      tokens.add(new Token("str", str));
       pos += str.length + 2;
     } else if (_matchKeyword(rest) != null) {
       final str = _matchKeyword(rest)!;
-      tokens.add(new Token("keyword", str));
+      tokens.add(new Token("kw", str));
       pos += str.length;
     } else if (_matchNumber(rest) != null) {
       final str = _matchNumber(rest)!;
@@ -47,7 +47,7 @@ void main() {
       pos += str.length;
     } else if (_matchSymbol(rest) != null) {
       final str = _matchSymbol(rest)!;
-      tokens.add(new Token("symbol", str));
+      tokens.add(new Token("sym", str));
       pos += str.length;
     } else if (_matchIdent(rest) != null) {
       final str = _matchIdent(rest)!;

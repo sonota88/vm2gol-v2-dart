@@ -54,23 +54,78 @@ test_nn() {
 
 # --------------------------------
 
+test_compile() {
+  ns=
+
+  if [ $# -eq 1 ]; then
+    ns="$1"
+  else
+    ns="$(seq 1 16)"
+  fi
+
+  for n in $ns; do
+    test_nn $(printf "%02d" $n)
+  done
+
+  if [ "$ERRS" = "" ]; then
+    echo "ok"
+  else
+    echo "----"
+    echo "FAILED: ${ERRS}"
+  fi
+}
+
+# --------------------------------
+
+test_all() {
+  # echo "==== json ===="
+  # test_json
+  # if [ $? -ne 0 ]; then
+  #   ERRS="${ERRS},${nn}_json"
+  #   return
+  # fi
+
+  # echo "==== lex ===="
+  # test_lex
+  # if [ $? -ne 0 ]; then
+  #   ERRS="${ERRS},${nn}_lex"
+  #   return
+  # fi
+
+  # echo "==== parse ===="
+  # test_parse
+  # if [ $? -ne 0 ]; then
+  #   ERRS="${ERRS},${nn}_parser"
+  #   return
+  # fi
+
+  echo "==== compile ===="
+  test_compile
+  if [ $? -ne 0 ]; then
+    ERRS="${ERRS},${nn}_compile"
+    return
+  fi
+}
+# --------------------------------
+
 mkdir -p z_tmp
 
-ns=
+cmd="$1"; shift
+case $cmd in
+  compile | c*)  #task: Run compile tests
+    test_compile "$@"
+    # postproc "compile"
+    ;;
 
-if [ $# -eq 1 ]; then
-  ns="$1"
-else
-  ns="$(seq 1 16)"
-fi
+  all | a*)      #task: Run all tests
+    test_all
+    # postproc "all"
+    ;;
 
-for n in $ns; do
-  test_nn $(printf "%02d" $n)
-done
+  *)
+    echo "Tasks:"
+    grep '#task: ' $0 | grep -v grep
+    ;;
 
-if [ "$ERRS" = "" ]; then
-  echo "ok"
-else
-  echo "----"
-  echo "FAILED: ${ERRS}"
-fi
+esac
+

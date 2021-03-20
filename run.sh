@@ -2,5 +2,5 @@
 
 cat "$1" \
   | dart lexer.dart \
-  | dart vgparser.dart \
+  | dart parser.dart \
   | dart vgcg.dart

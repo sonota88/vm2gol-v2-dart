@@ -31,7 +31,7 @@ test_nn() {
     return
   fi
 
-  cat $temp_tokens_file | dart vgparser.dart > $temp_vgt_file
+  cat $temp_tokens_file | dart parser.dart > $temp_vgt_file
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_parse"
     return

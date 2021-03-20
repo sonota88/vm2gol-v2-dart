@@ -346,10 +346,14 @@ List genWhile(fnArgNames, lvarNames, rest) {
   globalLabelId++;
   final labelId = globalLabelId;
 
+  final labelBegin = "while_${labelId}";
+  final labelEnd = "end_while_${labelId}";
+  final labelTrue = "true_${labelId}";
+
   alines.add("");
 
   // ループの先頭
-  alines.add("label while_${labelId}");
+  alines.add("label ${labelBegin}");
 
   // 条件の評価
   alines += genExp(fnArgNames, lvarNames, condExp);
@@ -359,20 +363,20 @@ List genWhile(fnArgNames, lvarNames, rest) {
   alines.add("  compare");
 
   // true の場合ループの本体を実行
-  alines.add("  jump_eq true_${labelId}");
+  alines.add("  jump_eq ${labelTrue}");
 
   // false の場合ループを抜ける
-  alines.add("  jump end_while_${labelId}");
+  alines.add("  jump ${labelEnd}");
 
-  alines.add("label true_${labelId}");
+  alines.add("label ${labelTrue}");
 
   // ループの本体
   alines += genStmts(fnArgNames, lvarNames, body);
 
   // ループの先頭に戻る
-  alines.add("  jump while_${labelId}");
+  alines.add("  jump ${labelBegin}");
 
-  alines.add("label end_while_${labelId}");
+  alines.add("label ${labelEnd}");
   alines.add("");
 
   return alines;

@@ -23,9 +23,9 @@ test_nn() {
 
   echo "test_${nn}"
 
-  local exp_vga_file="${TEST_DIR}/exp_${nn}.vga.txt"
+  local exp_vga_file="${TEST_DIR}/compile/exp_${nn}.vga.txt"
 
-  cat ${TEST_DIR}/${nn}.vg.txt | dart lexer.dart > $temp_tokens_file
+  cat ${TEST_DIR}/compile/${nn}.vg.txt | dart lexer.dart > $temp_tokens_file
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_lex"
     return

@@ -28,95 +28,6 @@ toLvarRef(lvarNames, lvarName) {
   return "[bp-${ i + 1 }]";
 }
 
-List codegenWhile(fnArgNames, lvarNames, rest) {
-  var alines = [];
-  final condExp = rest[0];
-  final body = rest[1];
-
-  globalLabelId++;
-  final labelId = globalLabelId;
-
-  alines.add("");
-
-  // ループの先頭
-  alines.add("label while_${labelId}");
-
-  // 条件の評価
-  alines += codegenExp(fnArgNames, lvarNames, condExp);
-
-  // 比較対象の値（真）をセット
-  alines.add("  set_reg_b 1");
-  alines.add("  compare");
-
-  // true の場合ループの本体を実行
-  alines.add("  jump_eq true_${labelId}");
-
-  // false の場合ループを抜ける
-  alines.add("  jump end_while_${labelId}");
-
-  alines.add("label true_${labelId}");
-
-  // ループの本体
-  alines += codegenStmts(fnArgNames, lvarNames, body);
-
-  // ループの先頭に戻る
-  alines.add("  jump while_${labelId}");
-
-  alines.add("label end_while_${labelId}");
-  alines.add("");
-
-  return alines;
-}
-
-List codegenCase(fnArgNames, lvarNames, whenBlocks) {
-  var alines = [];
-
-  globalLabelId++;
-  final labelId = globalLabelId;
-
-  var whenIdx = -1;
-  final thenBodies = [];
-
-  whenBlocks.forEach((whenBlock){
-      whenIdx++;
-
-      final cond = whenBlock[0];
-      final rest = getRest(whenBlock);
-
-      final condHead = cond[0];
-      final condRest = getRest(cond);
-
-      alines.add("  # 条件 ${labelId}_${whenIdx}: ${inspect(cond)}");
-
-      if (condHead == "eq") {
-        alines += codegenExp(fnArgNames, lvarNames, cond);
-
-        alines.add("  set_reg_b 1");
-
-        alines.add("  compare");
-        alines.add("  jump_eq when_${labelId}_${whenIdx}");
-
-        var thenAlines = [];
-        thenAlines.add("label when_${labelId}_${whenIdx}");
-        thenAlines += codegenStmts(fnArgNames, lvarNames, rest);
-        thenAlines.add("  jump end_case_${labelId}");
-        thenBodies.add(thenAlines);
-      } else {
-        throw notYetImpl([ condHead ]);
-      }
-  });
-
-  alines.add("  jump end_case_${labelId}");
-
-  thenBodies.forEach((thenAlines){
-      alines += thenAlines;
-  });
-
-  alines.add("label end_case_${labelId}");
-
-  return alines;
-}
-
 List _codegenExp_push(fnArgNames, lvarNames, val) {
   var alines = [];
 
@@ -423,6 +334,95 @@ List codegenReturn(lvarNames, stmtRest) {
   } else {
     throw notYetImpl([ retval ]);
   }
+
+  return alines;
+}
+
+List codegenWhile(fnArgNames, lvarNames, rest) {
+  var alines = [];
+  final condExp = rest[0];
+  final body = rest[1];
+
+  globalLabelId++;
+  final labelId = globalLabelId;
+
+  alines.add("");
+
+  // ループの先頭
+  alines.add("label while_${labelId}");
+
+  // 条件の評価
+  alines += codegenExp(fnArgNames, lvarNames, condExp);
+
+  // 比較対象の値（真）をセット
+  alines.add("  set_reg_b 1");
+  alines.add("  compare");
+
+  // true の場合ループの本体を実行
+  alines.add("  jump_eq true_${labelId}");
+
+  // false の場合ループを抜ける
+  alines.add("  jump end_while_${labelId}");
+
+  alines.add("label true_${labelId}");
+
+  // ループの本体
+  alines += codegenStmts(fnArgNames, lvarNames, body);
+
+  // ループの先頭に戻る
+  alines.add("  jump while_${labelId}");
+
+  alines.add("label end_while_${labelId}");
+  alines.add("");
+
+  return alines;
+}
+
+List codegenCase(fnArgNames, lvarNames, whenBlocks) {
+  var alines = [];
+
+  globalLabelId++;
+  final labelId = globalLabelId;
+
+  var whenIdx = -1;
+  final thenBodies = [];
+
+  whenBlocks.forEach((whenBlock){
+      whenIdx++;
+
+      final cond = whenBlock[0];
+      final rest = getRest(whenBlock);
+
+      final condHead = cond[0];
+      final condRest = getRest(cond);
+
+      alines.add("  # 条件 ${labelId}_${whenIdx}: ${inspect(cond)}");
+
+      if (condHead == "eq") {
+        alines += codegenExp(fnArgNames, lvarNames, cond);
+
+        alines.add("  set_reg_b 1");
+
+        alines.add("  compare");
+        alines.add("  jump_eq when_${labelId}_${whenIdx}");
+
+        var thenAlines = [];
+        thenAlines.add("label when_${labelId}_${whenIdx}");
+        thenAlines += codegenStmts(fnArgNames, lvarNames, rest);
+        thenAlines.add("  jump end_case_${labelId}");
+        thenBodies.add(thenAlines);
+      } else {
+        throw notYetImpl([ condHead ]);
+      }
+  });
+
+  alines.add("  jump end_case_${labelId}");
+
+  thenBodies.forEach((thenAlines){
+      alines += thenAlines;
+  });
+
+  alines.add("label end_case_${labelId}");
 
   return alines;
 }

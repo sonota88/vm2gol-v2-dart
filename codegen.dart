@@ -81,21 +81,24 @@ List _genExp_eq() {
   globalLabelId++;
   final labelId = globalLabelId;
 
+  final labelEnd = "end_eq_${labelId}";
+  final labelThen = "then_${labelId}";
+
   alines.add("  pop reg_b");
   alines.add("  pop reg_a");
 
   alines.add("  compare");
-  alines.add("  jump_eq then_${labelId}");
+  alines.add("  jump_eq ${labelThen}");
 
   // else
   alines.add("  set_reg_a 0");
-  alines.add("  jump end_eq_${labelId}");
+  alines.add("  jump ${labelEnd}");
 
   // then
-  alines.add("label then_${labelId}");
+  alines.add("label ${labelThen}");
   alines.add("  set_reg_a 1");
 
-  alines.add("label end_eq_${labelId}");
+  alines.add("label ${labelEnd}");
 
   return alines;
 }
@@ -106,21 +109,24 @@ List _genExp_neq() {
   globalLabelId++;
   final labelId = globalLabelId;
 
+  final labelEnd = "end_neq_${labelId}";
+  final labelThen = "then_${labelId}";
+
   alines.add("  pop reg_b");
   alines.add("  pop reg_a");
 
   alines.add("  compare");
-  alines.add("  jump_eq then_${labelId}");
+  alines.add("  jump_eq ${labelThen}");
 
   // else
   alines.add("  set_reg_a 1");
-  alines.add("  jump end_neq_${labelId}");
+  alines.add("  jump ${labelEnd}");
 
   // then
-  alines.add("label then_${labelId}");
+  alines.add("label ${labelThen}");
   alines.add("  set_reg_a 0");
 
-  alines.add("label end_neq_${labelId}");
+  alines.add("label ${labelEnd}");
 
   return alines;
 }

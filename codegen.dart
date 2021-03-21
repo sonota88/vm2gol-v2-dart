@@ -331,7 +331,7 @@ List genReturn(lvarNames, stmtRest) {
   final retval = stmtRest[0];
 
   if (retval is int) {
-    alines.add("  set_reg_a ${retval}");
+    alines.add("  cp ${retval} reg_a");
   } else if (retval is String) {
 
     if (_matchVramRef_ident(retval) != null) {

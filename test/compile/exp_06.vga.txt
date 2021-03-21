@@ -23,7 +23,7 @@ label main
   _cmt call~~sub
   call sub
   add_sp 0
-  set_reg_a 42
+  cp 42 reg_a
 
   cp bp sp
   pop bp

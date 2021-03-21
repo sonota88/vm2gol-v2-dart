@@ -133,6 +133,14 @@ _genExpr_binary(fnArgNames, lvarNames, exp) {
   }
 }
 
+genExpr(fnArgNames, lvarNames, expr) {
+  if (expr is List) {
+    _genExpr_binary(fnArgNames, lvarNames, expr);
+  } else {
+    throw notYetImpl([ expr ]);
+  }
+}
+
 genVar(fnArgNames, lvarNames, stmtRest) {
   print("  sub_sp 1");
 

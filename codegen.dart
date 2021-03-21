@@ -135,14 +135,6 @@ genExpr(fnArgNames, lvarNames, expr) {
     } else if (lvarNames.contains(expr)) {
       final cpSrc = toLvarRef(lvarNames, expr);
       print("  cp ${cpSrc} reg_a");
-    } else if (_matchVramRef_ident(expr) != null) {
-      final varName = _matchVramRef_ident(expr);
-      if (lvarNames.contains(varName)) {
-        final vramAddr = toLvarRef(lvarNames, varName);
-        print("  get_vram ${vramAddr} reg_a");
-      } else {
-        throw notYetImpl([ varName ]);
-      }
     } else {
       throw notYetImpl([ expr ]);
     }
@@ -187,44 +179,9 @@ genCallSet(fnArgNames, lvarNames, stmtRest) {
   print("  cp reg_a ${lvarRef}");
 }
 
-String? _matchVramRef_index(val) {
-  final re = new RegExp(r'^vram\[(\d+)\]');
-
-  final m = re.firstMatch(val);
-  if (m == null) {
-    return null;
-  }
-
-  return m.group(1);
-}
-
-String? _matchVramRef_ident(val) {
-  final re = new RegExp(r'^vram\[([a-z0-9_]+)\]');
-
-  final m = re.firstMatch(val);
-  if (m == null) {
-    return null;
-  }
-
-  return m.group(1);
-}
-
 _genSet_set(lvarNames, srcVal, dest) {
-  if (_matchVramRef_index(dest) != null) {
-    final vramAddr = _matchVramRef_index(dest);
-    print("  set_vram ${vramAddr} ${srcVal}");
-  } else if (_matchVramRef_ident(dest) != null) {
-    final varName = _matchVramRef_ident(dest);
-    if (lvarNames.contains(varName)) {
-      final ref = toLvarRef(lvarNames, varName);
-      print("  set_vram ${ref} ${srcVal}");
-    } else {
-      throw notYetImpl([ varName ]);
-    }
-  } else {
     final lvarRef = toLvarRef(lvarNames, dest);
     print("  cp ${srcVal} ${lvarRef}");
-  }
 }
 
 genSet(fnArgNames, lvarNames, rest) {

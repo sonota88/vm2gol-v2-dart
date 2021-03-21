@@ -27,8 +27,10 @@ label main
 
   # 関数の処理本体
   sub_sp 1
-  push 2
-  push 1
+  cp 2 reg_a
+  push reg_a
+  cp 1 reg_a
+  push reg_a
   _cmt call_set~~add
   call add
   add_sp 2

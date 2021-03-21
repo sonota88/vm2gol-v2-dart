@@ -158,7 +158,7 @@ _genCall_pushFnArg(fnArgNames, lvarNames, fnArg) {
     throw notYetImpl([ fnArg ]);
   }
 
-  print("  push ${pushArg}");
+  print("  cp ${pushArg} reg_a");
 }
 
 genCall(fnArgNames, lvarNames, stmtRest) {
@@ -169,6 +169,7 @@ genCall(fnArgNames, lvarNames, stmtRest) {
       _genCall_pushFnArg(
         fnArgNames, lvarNames, fnArg
       );
+      print("  push reg_a");
   });
 
   genVmComment("call  ${fnName}");
@@ -187,6 +188,7 @@ genCallSet(fnArgNames, lvarNames, stmtRest) {
       _genCall_pushFnArg(
         fnArgNames, lvarNames, fnArg
       );
+      print("  push reg_a");
   });
 
   genVmComment("call_set  ${fnName}");

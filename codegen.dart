@@ -410,9 +410,9 @@ List genCase(fnArgNames, lvarNames, whenBlocks) {
 
   final labelEnd = "end_case_${labelId}";
   final labelWhenHead = "when_${labelId}";
+  final labelEndWhenHead = "end_when_${labelId}";
 
   var whenIdx = -1;
-  final thenBodies = [];
 
   whenBlocks.forEach((whenBlock){
       whenIdx++;
@@ -432,21 +432,19 @@ List genCase(fnArgNames, lvarNames, whenBlocks) {
 
         alines.add("  compare");
         alines.add("  jump_eq ${labelWhenHead}_${whenIdx}");
+        alines.add("  jump ${labelEndWhenHead}_${whenIdx}");
 
-        var thenAlines = [];
-        thenAlines.add("label ${labelWhenHead}_${whenIdx}");
-        thenAlines += genStmts(fnArgNames, lvarNames, rest);
-        thenAlines.add("  jump ${labelEnd}");
-        thenBodies.add(thenAlines);
+        alines.add("label ${labelWhenHead}_${whenIdx}");
+
+        alines += genStmts(fnArgNames, lvarNames, rest);
+
+        alines.add("  jump ${labelEnd}");
+
+        alines.add("label ${labelEndWhenHead}_${whenIdx}");
+
       } else {
         throw notYetImpl([ condHead ]);
       }
-  });
-
-  alines.add("  jump ${labelEnd}");
-
-  thenBodies.forEach((thenAlines){
-      alines += thenAlines;
   });
 
   alines.add("label end_case_${labelId}");

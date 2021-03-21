@@ -409,6 +409,15 @@ genBuiltinSetVram() {
   print("  ret");
 }
 
+genBuiltinGetVram() {
+  print("");
+  print("label get_vram");
+  asmPrologue();
+  print("  get_vram [bp:2] reg_a"); // vram_addr dest
+  asmEpilogue();
+  print("  ret");
+}
+
 codegen(tree) {
   print("  call main");
   print("  exit");
@@ -420,6 +429,7 @@ codegen(tree) {
 
   print("#>builtins");
   genBuiltinSetVram();
+  genBuiltinGetVram();
   print("#<builtins");
 }
 

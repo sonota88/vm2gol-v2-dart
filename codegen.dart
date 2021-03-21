@@ -141,32 +141,12 @@ genVar(fnArgNames, lvarNames, stmtRest) {
   }
 }
 
-_genCall_pushFnArg(fnArgNames, lvarNames, fnArg) {
-  final pushArg;
-
-  if (fnArg is int) {
-    pushArg = fnArg;
-  } else if (fnArg is String) {
-    if (fnArgNames.contains(fnArg)) {
-      pushArg = toFnArgRef(fnArgNames, fnArg);
-    } else if (lvarNames.contains(fnArg)) {
-      pushArg = toLvarRef(lvarNames, fnArg);
-    } else {
-      throw notYetImpl([ fnArg ]);
-    }
-  } else {
-    throw notYetImpl([ fnArg ]);
-  }
-
-  print("  cp ${pushArg} reg_a");
-}
-
 genCall(fnArgNames, lvarNames, stmtRest) {
   final fnName = stmtRest[0];
   final fnArgs = getRest(stmtRest);
 
   fnArgs.reversed.forEach((fnArg){
-      _genCall_pushFnArg(
+      genExpr(
         fnArgNames, lvarNames, fnArg
       );
       print("  push reg_a");
@@ -185,7 +165,7 @@ genCallSet(fnArgNames, lvarNames, stmtRest) {
   final fnArgs = getRest(fnTemp);
 
   fnArgs.reversed.forEach((fnArg){
-      _genCall_pushFnArg(
+      genExpr(
         fnArgNames, lvarNames, fnArg
       );
       print("  push reg_a");

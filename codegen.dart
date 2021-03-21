@@ -28,9 +28,7 @@ toLvarRef(lvarNames, lvarName) {
   return "[bp-${ i + 1 }]";
 }
 
-List _genExpr_push(fnArgNames, lvarNames, val) {
-  var alines = [];
-
+_genExpr_push(fnArgNames, lvarNames, val) {
   var pushArg;
 
   if (val is int) {
@@ -44,135 +42,107 @@ List _genExpr_push(fnArgNames, lvarNames, val) {
       throw notYetImpl([ val ]);
     }
   } else if (val is List) {
-    alines += genExpr(fnArgNames, lvarNames, val);
+    genExpr(fnArgNames, lvarNames, val);
     pushArg = "reg_a";
   } else {
     throw notYetImpl([ val ]);
   }
 
-  alines.add("  push ${pushArg}");
-
-  return alines;
+  print("  push ${pushArg}");
 }
 
-List _genExpr_add() {
-  var alines = [];
-
-  alines.add("  pop reg_b");
-  alines.add("  pop reg_a");
-  alines.add("  add_ab");
-
-  return alines;
+_genExpr_add() {
+  print("  pop reg_b");
+  print("  pop reg_a");
+  print("  add_ab");
 }
 
-List _genExpr_mult() {
-  var alines = [];
-
-  alines.add("  pop reg_b");
-  alines.add("  pop reg_a");
-  alines.add("  mult_ab");
-
-  return alines;
+_genExpr_mult() {
+  print("  pop reg_b");
+  print("  pop reg_a");
+  print("  mult_ab");
 }
 
-List _genExpr_eq() {
-  final alines = [];
-
+_genExpr_eq() {
   globalLabelId++;
   final labelId = globalLabelId;
 
   final labelEnd = "end_eq_${labelId}";
   final labelThen = "then_${labelId}";
 
-  alines.add("  pop reg_b");
-  alines.add("  pop reg_a");
+  print("  pop reg_b");
+  print("  pop reg_a");
 
-  alines.add("  compare");
-  alines.add("  jump_eq ${labelThen}");
+  print("  compare");
+  print("  jump_eq ${labelThen}");
 
   // else
-  alines.add("  set_reg_a 0");
-  alines.add("  jump ${labelEnd}");
+  print("  set_reg_a 0");
+  print("  jump ${labelEnd}");
 
   // then
-  alines.add("label ${labelThen}");
-  alines.add("  set_reg_a 1");
+  print("label ${labelThen}");
+  print("  set_reg_a 1");
 
-  alines.add("label ${labelEnd}");
-
-  return alines;
+  print("label ${labelEnd}");
 }
 
-List _genExpr_neq() {
-  final alines = [];
-
+_genExpr_neq() {
   globalLabelId++;
   final labelId = globalLabelId;
 
   final labelEnd = "end_neq_${labelId}";
   final labelThen = "then_${labelId}";
 
-  alines.add("  pop reg_b");
-  alines.add("  pop reg_a");
+  print("  pop reg_b");
+  print("  pop reg_a");
 
-  alines.add("  compare");
-  alines.add("  jump_eq ${labelThen}");
+  print("  compare");
+  print("  jump_eq ${labelThen}");
 
   // else
-  alines.add("  set_reg_a 1");
-  alines.add("  jump ${labelEnd}");
+  print("  set_reg_a 1");
+  print("  jump ${labelEnd}");
 
   // then
-  alines.add("label ${labelThen}");
-  alines.add("  set_reg_a 0");
+  print("label ${labelThen}");
+  print("  set_reg_a 0");
 
-  alines.add("label ${labelEnd}");
-
-  return alines;
+  print("label ${labelEnd}");
 }
 
-List genExpr(fnArgNames, lvarNames, exp) {
-  var alines = [];
-
+genExpr(fnArgNames, lvarNames, exp) {
   final op = exp[0];
   final args = getRest(exp);
 
   final argL = args[0];
   final argR = args[1];
 
-  alines += _genExpr_push(fnArgNames, lvarNames, argL);
-  alines += _genExpr_push(fnArgNames, lvarNames, argR);
+  _genExpr_push(fnArgNames, lvarNames, argL);
+  _genExpr_push(fnArgNames, lvarNames, argR);
 
   if (op == "+") {
-    alines += _genExpr_add();
+    _genExpr_add();
   } else if (op == "*") {
-    alines += _genExpr_mult();
+    _genExpr_mult();
   } else if (op == "eq") {
-    alines += _genExpr_eq();
+    _genExpr_eq();
   } else if (op == "neq") {
-    alines += _genExpr_neq();
+    _genExpr_neq();
   } else {
     throw notYetImpl([ op ]);
   }
-
-  return alines;
 }
 
-List genVar(fnArgNames, lvarNames, stmtRest) {
-  var alines = [];
-
-  alines.add("  sub_sp 1");
+genVar(fnArgNames, lvarNames, stmtRest) {
+  print("  sub_sp 1");
 
   if (stmtRest.length == 2) {
-    alines += genSet(fnArgNames, lvarNames, stmtRest);
+    genSet(fnArgNames, lvarNames, stmtRest);
   }
-
-  return alines;
 }
 
-List _genCall_pushFnArg(fnArgNames, lvarNames, fnArg) {
-  var alines = [];
-
+_genCall_pushFnArg(fnArgNames, lvarNames, fnArg) {
   final pushArg;
 
   if (fnArg is int) {
@@ -189,33 +159,25 @@ List _genCall_pushFnArg(fnArgNames, lvarNames, fnArg) {
     throw notYetImpl([ fnArg ]);
   }
 
-  alines.add("  push ${pushArg}");
-
-  return alines;
+  print("  push ${pushArg}");
 }
 
-List genCall(fnArgNames, lvarNames, stmtRest) {
-  var alines = [];
-
+genCall(fnArgNames, lvarNames, stmtRest) {
   final fnName = stmtRest[0];
   final fnArgs = getRest(stmtRest);
 
   fnArgs.reversed.forEach((fnArg){
-      alines += _genCall_pushFnArg(
+      _genCall_pushFnArg(
         fnArgNames, lvarNames, fnArg
       );
   });
 
-  alines += genVmComment("call  ${fnName}");
-  alines.add("  call ${fnName}");
-  alines.add("  add_sp ${fnArgs.length}");
-
-  return alines;
+  genVmComment("call  ${fnName}");
+  print("  call ${fnName}");
+  print("  add_sp ${fnArgs.length}");
 }
 
-List genCallSet(fnArgNames, lvarNames, stmtRest) {
-  var alines = [];
-
+genCallSet(fnArgNames, lvarNames, stmtRest) {
   final lvarName = stmtRest[0];
   final fnTemp = stmtRest[1];
 
@@ -223,19 +185,17 @@ List genCallSet(fnArgNames, lvarNames, stmtRest) {
   final fnArgs = getRest(fnTemp);
 
   fnArgs.reversed.forEach((fnArg){
-      alines += _genCall_pushFnArg(
+      _genCall_pushFnArg(
         fnArgNames, lvarNames, fnArg
       );
   });
 
-  alines += genVmComment("call_set  ${fnName}");
-  alines.add("  call ${fnName}");
-  alines.add("  add_sp ${fnArgs.length}");
+  genVmComment("call_set  ${fnName}");
+  print("  call ${fnName}");
+  print("  add_sp ${fnArgs.length}");
 
   final lvarRef = toLvarRef(lvarNames, lvarName);
-  alines.add("  cp reg_a ${lvarRef}");
-
-  return alines;
+  print("  cp reg_a ${lvarRef}");
 }
 
 String? _matchVramRef_index(val) {
@@ -260,30 +220,25 @@ String? _matchVramRef_ident(val) {
   return m.group(1);
 }
 
-List _genSet_set(lvarNames, srcVal, dest) {
-  var alines = [];
-
+_genSet_set(lvarNames, srcVal, dest) {
   if (_matchVramRef_index(dest) != null) {
     final vramAddr = _matchVramRef_index(dest);
-    alines.add("  set_vram ${vramAddr} ${srcVal}");
+    print("  set_vram ${vramAddr} ${srcVal}");
   } else if (_matchVramRef_ident(dest) != null) {
     final varName = _matchVramRef_ident(dest);
     if (lvarNames.contains(varName)) {
       final ref = toLvarRef(lvarNames, varName);
-      alines.add("  set_vram ${ref} ${srcVal}");
+      print("  set_vram ${ref} ${srcVal}");
     } else {
       throw notYetImpl([ varName ]);
     }
   } else {
     final lvarRef = toLvarRef(lvarNames, dest);
-    alines.add("  cp ${srcVal} ${lvarRef}");
+    print("  cp ${srcVal} ${lvarRef}");
   }
-
-  return alines;
 }
 
-List genSet(fnArgNames, lvarNames, rest) {
-  var alines = [];
+genSet(fnArgNames, lvarNames, rest) {
   final dest = rest[0];
   final exp = rest[1];
 
@@ -297,14 +252,14 @@ List genSet(fnArgNames, lvarNames, rest) {
       srcVal = toLvarRef(lvarNames, exp);
     } else if ( _matchVramRef_index(exp) != null ) {
       final vramAddr = _matchVramRef_index(exp);
-      alines.add("  get_vram ${vramAddr} reg_a");
+      print("  get_vram ${vramAddr} reg_a");
       srcVal = "reg_a";
     } else if ( _matchVramRef_ident(exp) != null ) {
       final varName = _matchVramRef_ident(exp);
       
       if (lvarNames.contains(varName)) {
         final ref = toLvarRef(lvarNames, varName);
-        alines.add("  get_vram ${ref} reg_a");
+        print("  get_vram ${ref} reg_a");
       } else {
         throw notYetImpl([ varName ]);
       }
@@ -314,24 +269,20 @@ List genSet(fnArgNames, lvarNames, rest) {
       throw notYetImpl([ exp ]);
     }
   } else if (exp is List) {
-    alines += genExpr(fnArgNames, lvarNames, exp);
+    genExpr(fnArgNames, lvarNames, exp);
     srcVal = "reg_a";
   } else {
     throw notYetImpl([ exp ]);
   }
 
-  alines += _genSet_set(lvarNames, srcVal, dest);
-
-  return alines;
+  _genSet_set(lvarNames, srcVal, dest);
 }
 
-List genReturn(lvarNames, stmtRest) {
-  var alines = [];
-
+genReturn(lvarNames, stmtRest) {
   final retval = stmtRest[0];
 
   if (retval is int) {
-    alines.add("  cp ${retval} reg_a");
+    print("  cp ${retval} reg_a");
   } else if (retval is String) {
 
     if (_matchVramRef_ident(retval) != null) {
@@ -339,14 +290,14 @@ List genReturn(lvarNames, stmtRest) {
 
       if (lvarNames.contains(varName)) {
         final ref = toLvarRef(lvarNames, varName);
-        alines.add("  get_vram ${ref} reg_a");
+        print("  get_vram ${ref} reg_a");
       } else {
         throw notYetImpl([ retval ]);
       }
 
     } else if (lvarNames.contains(retval)) {
       final lvarRef = toLvarRef(lvarNames, retval);
-      alines.add("  cp ${lvarRef} reg_a");
+      print("  cp ${lvarRef} reg_a");
     } else {
       throw notYetImpl([ retval ]);
     }
@@ -354,12 +305,9 @@ List genReturn(lvarNames, stmtRest) {
   } else {
     throw notYetImpl([ retval ]);
   }
-
-  return alines;
 }
 
-List genWhile(fnArgNames, lvarNames, rest) {
-  var alines = [];
+genWhile(fnArgNames, lvarNames, rest) {
   final condExp = rest[0];
   final body = rest[1];
 
@@ -370,41 +318,37 @@ List genWhile(fnArgNames, lvarNames, rest) {
   final labelEnd = "end_while_${labelId}";
   final labelTrue = "true_${labelId}";
 
-  alines.add("");
+  print("");
 
   // ループの先頭
-  alines.add("label ${labelBegin}");
+  print("label ${labelBegin}");
 
   // 条件の評価
-  alines += genExpr(fnArgNames, lvarNames, condExp);
+  genExpr(fnArgNames, lvarNames, condExp);
 
   // 比較対象の値（真）をセット
-  alines.add("  set_reg_b 1");
-  alines.add("  compare");
+  print("  set_reg_b 1");
+  print("  compare");
 
   // true の場合ループの本体を実行
-  alines.add("  jump_eq ${labelTrue}");
+  print("  jump_eq ${labelTrue}");
 
   // false の場合ループを抜ける
-  alines.add("  jump ${labelEnd}");
+  print("  jump ${labelEnd}");
 
-  alines.add("label ${labelTrue}");
+  print("label ${labelTrue}");
 
   // ループの本体
-  alines += genStmts(fnArgNames, lvarNames, body);
+  genStmts(fnArgNames, lvarNames, body);
 
   // ループの先頭に戻る
-  alines.add("  jump ${labelBegin}");
+  print("  jump ${labelBegin}");
 
-  alines.add("label ${labelEnd}");
-  alines.add("");
-
-  return alines;
+  print("label ${labelEnd}");
+  print("");
 }
 
-List genCase(fnArgNames, lvarNames, whenBlocks) {
-  var alines = [];
-
+genCase(fnArgNames, lvarNames, whenBlocks) {
   globalLabelId++;
   final labelId = globalLabelId;
 
@@ -423,102 +367,88 @@ List genCase(fnArgNames, lvarNames, whenBlocks) {
       final condHead = cond[0];
       final condRest = getRest(cond);
 
-      alines.add("  # 条件 ${labelId}_${whenIdx}: ${inspect(cond)}");
+      print("  # 条件 ${labelId}_${whenIdx}: ${inspect(cond)}");
 
       if (condHead == "eq") {
-        alines += genExpr(fnArgNames, lvarNames, cond);
+        genExpr(fnArgNames, lvarNames, cond);
 
-        alines.add("  set_reg_b 1");
+        print("  set_reg_b 1");
 
-        alines.add("  compare");
-        alines.add("  jump_eq ${labelWhenHead}_${whenIdx}");
-        alines.add("  jump ${labelEndWhenHead}_${whenIdx}");
+        print("  compare");
+        print("  jump_eq ${labelWhenHead}_${whenIdx}");
+        print("  jump ${labelEndWhenHead}_${whenIdx}");
 
-        alines.add("label ${labelWhenHead}_${whenIdx}");
+        print("label ${labelWhenHead}_${whenIdx}");
 
-        alines += genStmts(fnArgNames, lvarNames, rest);
+        genStmts(fnArgNames, lvarNames, rest);
 
-        alines.add("  jump ${labelEnd}");
+        print("  jump ${labelEnd}");
 
-        alines.add("label ${labelEndWhenHead}_${whenIdx}");
+        print("label ${labelEndWhenHead}_${whenIdx}");
 
       } else {
         throw notYetImpl([ condHead ]);
       }
   });
 
-  alines.add("label end_case_${labelId}");
-
-  return alines;
+  print("label end_case_${labelId}");
 }
 
-List genVmComment(comment) {
-  return [
-    "  _cmt " + comment.replaceAll(" ", "~")
-  ];
+genVmComment(comment) {
+  print("  _cmt " + comment.replaceAll(" ", "~"));
 }
 
-List genStmt(fnArgNames, lvarNames, stmt) {
-  var alines = [];
-
+genStmt(fnArgNames, lvarNames, stmt) {
   final stmtHead = stmt[0];
   final stmtRest = getRest(stmt);
 
   if (stmtHead == "call") {
-    alines += genCall(fnArgNames, lvarNames, stmtRest);
+    genCall(fnArgNames, lvarNames, stmtRest);
 
   } else if (stmtHead == "call_set") {
-    alines += genCallSet(fnArgNames, lvarNames, stmtRest);
+    genCallSet(fnArgNames, lvarNames, stmtRest);
 
   } else if (stmtHead == "set") {
-    alines += genSet(fnArgNames, lvarNames, stmtRest);
+    genSet(fnArgNames, lvarNames, stmtRest);
 
   } else if (stmtHead == "return") {
-    alines += genReturn(lvarNames, stmtRest);
+    genReturn(lvarNames, stmtRest);
 
   } else if (stmtHead == "while") {
-    alines += genWhile(fnArgNames, lvarNames, stmtRest);
+    genWhile(fnArgNames, lvarNames, stmtRest);
 
   } else if (stmtHead == "case") {
-    alines += genCase(fnArgNames, lvarNames, stmtRest);
+    genCase(fnArgNames, lvarNames, stmtRest);
 
   } else if (stmtHead == "_cmt") {
-    alines += genVmComment(stmtRest[0]);
+    genVmComment(stmtRest[0]);
 
   } else {
     throw notYetImpl([ stmtHead ]);
   }
-
-  return alines;
 }
 
-List genStmts(fnArgNames, lvarNames, stmts) {
-  var alines = [];
-
+genStmts(fnArgNames, lvarNames, stmts) {
   var stmtHead;
   var stmtRest;
 
   stmts.forEach((stmt){
-      alines += genStmt(fnArgNames, lvarNames, stmt);
+      genStmt(fnArgNames, lvarNames, stmt);
   });
-
-  return alines;
 }
 
-List genFuncDef(rest) {
-  var alines = [];
-
+genFuncDef(rest) {
   final fnName = rest[0];
   final fnArgNames = rest[1];
   final body = rest[2];
 
-  alines.add("");
-  alines.add("label " + fnName);
-  alines.add("  push bp");
-  alines.add("  cp sp bp");
+  print("");
+  print("label " + fnName);
+  print("  push bp");
+  print("  cp sp bp");
 
-  alines.add("");
-  alines.add("  # 関数の処理本体");
+  print("");
+  print("  # 関数の処理本体");
 
   final lvarNames = [];
 
@@ -526,65 +456,50 @@ List genFuncDef(rest) {
       final stmtRest = getRest(stmt);
       if (stmt[0] == "var") {
         lvarNames.add(stmtRest[0]);
-        alines += genVar(fnArgNames, lvarNames, stmtRest);
+        genVar(fnArgNames, lvarNames, stmtRest);
       } else {
-        alines += genStmt(fnArgNames, lvarNames, stmt);
+        genStmt(fnArgNames, lvarNames, stmt);
       }
   });
 
-  alines.add("");
-  alines.add("  cp bp sp");
-  alines.add("  pop bp");
-  alines.add("  ret");
-
-  return alines;
+  print("");
+  print("  cp bp sp");
+  print("  pop bp");
+  print("  ret");
 }
 
-List genTopStmts(rest) {
-  var alines = [];
-
+genTopStmts(rest) {
   rest.forEach((stmt){
       final stmtHead = stmt[0];
       final stmtRest = getRest(stmt);
 
       if (stmtHead == "func") {
-        alines += genFuncDef(stmtRest);
+        genFuncDef(stmtRest);
       } else {
         throw notYetImpl([stmtHead]);
       }
   });
-
-  return alines;
 }
 
-List codegen(tree) {
-  var alines = [];
-
-  alines.add("  call main");
-  alines.add("  exit");
+codegen(tree) {
+  print("  call main");
+  print("  exit");
 
   final head = tree[0];
   final rest = getRest(tree);
 
-  alines += genTopStmts(rest);
-
-  return alines;
+  genTopStmts(rest);
 }
 
 main(){
   final src = readAll();
   final tree = parseJson(src);
 
-  var alines;
   try {
-    alines = codegen(tree);
+    codegen(tree);
   } catch(e, s) {
     puts_e(e);
     puts_e(s);
     throw e;
   }
-
-  alines.forEach((aline){
-      print(aline);
-  });
 }

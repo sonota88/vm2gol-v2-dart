@@ -12,7 +12,7 @@ label main
   pop reg_b
   pop reg_a
   mult_ab
-  cp reg_a [bp-1]
+  cp reg_a [bp:-1]
   push 4
   push 5
   pop reg_b
@@ -24,7 +24,7 @@ label main
 label then_1
   set_reg_a 0
 label end_neq_1
-  cp reg_a [bp-1]
+  cp reg_a [bp:-1]
 
   cp bp sp
   pop bp

@@ -20,12 +20,12 @@ var globalLabelId = 0;
 
 toFnArgRef(fnArgNames, fnArgName) {
   final i = fnArgNames.indexOf(fnArgName);
-  return "[bp+${ i + 2 }]";
+  return "[bp:${ i + 2 }]";
 }
 
 toLvarRef(lvarNames, lvarName) {
   final i = lvarNames.indexOf(lvarName);
-  return "[bp-${ i + 1 }]";
+  return "[bp:-${ i + 1 }]";
 }
 
 _genExpr_push(fnArgNames, lvarNames, val) {

@@ -17,9 +17,9 @@ label main
 
   # 関数の処理本体
   sub_sp 1
-  cp 2 [bp-1]
+  cp 2 [bp:-1]
   sub_sp 1
-  cp 1 [bp-2]
+  cp 1 [bp:-2]
   _cmt call~~sub
   call sub
   add_sp 0

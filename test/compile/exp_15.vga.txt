@@ -7,8 +7,8 @@ label ret_vram_lvar
 
   # 関数の処理本体
   sub_sp 1
-  cp 49 [bp-1]
-  get_vram [bp-1] reg_a
+  cp 49 [bp:-1]
+  get_vram [bp:-1] reg_a
 
   cp bp sp
   pop bp
@@ -20,7 +20,7 @@ label ret_lvar
 
   # 関数の処理本体
   sub_sp 1
-  cp [bp-1] reg_a
+  cp [bp:-1] reg_a
 
   cp bp sp
   pop bp

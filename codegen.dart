@@ -136,6 +136,16 @@ _genExpr_binary(fnArgNames, lvarNames, exp) {
 genExpr(fnArgNames, lvarNames, expr) {
   if (expr is int) {
     print("  cp ${expr} reg_a");
+  } else if (expr is String) {
+    if (fnArgNames.contains(expr)) {
+      final cpSrc = toFnArgRef(fnArgNames, expr);
+      print("  cp ${cpSrc} reg_a");
+    } else if (lvarNames.contains(expr)) {
+      final cpSrc = toLvarRef(lvarNames, expr);
+      print("  cp ${cpSrc} reg_a");
+    } else {
+      throw notYetImpl([ expr ]);
+    }
   } else if (expr is List) {
     _genExpr_binary(fnArgNames, lvarNames, expr);
   } else {

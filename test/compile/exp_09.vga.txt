@@ -9,8 +9,10 @@ label main
   sub_sp 1
   cp 0 [bp:-1]
   # 条件 1_0: ["eq", "a", 1]
-  push [bp:-1]
-  push 1
+  cp [bp:-1] reg_a
+  push reg_a
+  cp 1 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare
@@ -29,8 +31,10 @@ label when_1_0
   jump end_case_1
 label end_when_1_0
   # 条件 1_1: ["eq", "a", 0]
-  push [bp:-1]
-  push 0
+  cp [bp:-1] reg_a
+  push reg_a
+  cp 0 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare

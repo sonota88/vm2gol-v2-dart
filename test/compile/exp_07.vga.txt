@@ -7,8 +7,10 @@ label add
 
   # 関数の処理本体
   sub_sp 1
-  push [bp:2]
-  push [bp:3]
+  cp [bp:2] reg_a
+  push reg_a
+  cp [bp:3] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab

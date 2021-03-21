@@ -7,18 +7,22 @@ label to_vi
 
   # 関数の処理本体
   sub_sp 1
-  push [bp:4]
-  push [bp:2]
+  cp [bp:4] reg_a
+  push reg_a
+  cp [bp:2] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   mult_ab
   push reg_a
-  push [bp:3]
+  cp [bp:3] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
   push reg_a
-  push [bp:5]
+  cp [bp:5] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -96,8 +100,10 @@ label adjust_index
   # 関数の処理本体
   sub_sp 1
   # 条件 1_0: ["eq", "i", -1]
-  push [bp:3]
-  push -1
+  cp [bp:3] reg_a
+  push reg_a
+  cp -1 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare
@@ -113,8 +119,10 @@ label end_eq_2
   jump end_when_1_0
 label when_1_0
   _cmt 下限を超えた場合
-  push [bp:2]
-  push -1
+  cp [bp:2] reg_a
+  push reg_a
+  cp -1 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -122,8 +130,10 @@ label when_1_0
   jump end_case_1
 label end_when_1_0
   # 条件 1_1: ["eq", "i", "width"]
-  push [bp:3]
-  push [bp:2]
+  cp [bp:3] reg_a
+  push reg_a
+  cp [bp:2] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare
@@ -143,8 +153,10 @@ label when_1_1
   jump end_case_1
 label end_when_1_1
   # 条件 1_2: ["eq", 1, 1]
-  push 1
-  push 1
+  cp 1 reg_a
+  push reg_a
+  cp 1 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare
@@ -178,8 +190,10 @@ label calc_next_gen
   sub_sp 1
   cp 0 [bp:-1]
   # 条件 5_0: ["eq", "current_val", 0]
-  push [bp:2]
-  push 0
+  cp [bp:2] reg_a
+  push reg_a
+  cp 0 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare
@@ -195,8 +209,10 @@ label end_eq_6
   jump end_when_5_0
 label when_5_0
   # 条件 7_0: ["eq", "count", 3]
-  push [bp:3]
-  push 3
+  cp [bp:3] reg_a
+  push reg_a
+  cp 3 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare
@@ -218,8 +234,10 @@ label end_case_7
   jump end_case_5
 label end_when_5_0
   # 条件 5_1: ["eq", 0, 0]
-  push 0
-  push 0
+  cp 0 reg_a
+  push reg_a
+  cp 0 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare
@@ -235,8 +253,10 @@ label end_eq_9
   jump end_when_5_1
 label when_5_1
   # 条件 10_0: ["eq", "count", 2]
-  push [bp:3]
-  push 2
+  cp [bp:3] reg_a
+  push reg_a
+  cp 2 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare
@@ -255,8 +275,10 @@ label when_10_0
   jump end_case_10
 label end_when_10_0
   # 条件 10_1: ["eq", "count", 3]
-  push [bp:3]
-  push 3
+  cp [bp:3] reg_a
+  push reg_a
+  cp 3 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare
@@ -292,29 +314,37 @@ label count_alive
   sub_sp 1
   cp 0 [bp:-1]
   sub_sp 1
-  push [bp:4]
-  push -1
+  cp [bp:4] reg_a
+  push reg_a
+  cp -1 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
   cp reg_a [bp:-2]
   sub_sp 1
-  push [bp:4]
-  push 1
+  cp [bp:4] reg_a
+  push reg_a
+  cp 1 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
   cp reg_a [bp:-3]
   sub_sp 1
-  push [bp:5]
-  push -1
+  cp [bp:5] reg_a
+  push reg_a
+  cp -1 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
   cp reg_a [bp:-4]
   sub_sp 1
-  push [bp:5]
-  push 1
+  cp [bp:5] reg_a
+  push reg_a
+  cp 1 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -361,8 +391,10 @@ label count_alive
   call vram_get
   add_sp 3
   cp reg_a [bp:-6]
-  push [bp:-1]
-  push [bp:-6]
+  cp [bp:-1] reg_a
+  push reg_a
+  cp [bp:-6] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -375,8 +407,10 @@ label count_alive
   call vram_get
   add_sp 3
   cp reg_a [bp:-6]
-  push [bp:-1]
-  push [bp:-6]
+  cp [bp:-1] reg_a
+  push reg_a
+  cp [bp:-6] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -389,8 +423,10 @@ label count_alive
   call vram_get
   add_sp 3
   cp reg_a [bp:-6]
-  push [bp:-1]
-  push [bp:-6]
+  cp [bp:-1] reg_a
+  push reg_a
+  cp [bp:-6] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -403,8 +439,10 @@ label count_alive
   call vram_get
   add_sp 3
   cp reg_a [bp:-6]
-  push [bp:-1]
-  push [bp:-6]
+  cp [bp:-1] reg_a
+  push reg_a
+  cp [bp:-6] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -417,8 +455,10 @@ label count_alive
   call vram_get
   add_sp 3
   cp reg_a [bp:-6]
-  push [bp:-1]
-  push [bp:-6]
+  cp [bp:-1] reg_a
+  push reg_a
+  cp [bp:-6] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -431,8 +471,10 @@ label count_alive
   call vram_get
   add_sp 3
   cp reg_a [bp:-6]
-  push [bp:-1]
-  push [bp:-6]
+  cp [bp:-1] reg_a
+  push reg_a
+  cp [bp:-6] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -445,8 +487,10 @@ label count_alive
   call vram_get
   add_sp 3
   cp reg_a [bp:-6]
-  push [bp:-1]
-  push [bp:-6]
+  cp [bp:-1] reg_a
+  push reg_a
+  cp [bp:-6] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -459,8 +503,10 @@ label count_alive
   call vram_get
   add_sp 3
   cp reg_a [bp:-6]
-  push [bp:-1]
-  push [bp:-6]
+  cp [bp:-1] reg_a
+  push reg_a
+  cp [bp:-6] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -486,8 +532,10 @@ label make_next_gen
   sub_sp 1
 
 label while_13
-  push [bp:-2]
-  push [bp:3]
+  cp [bp:-2] reg_a
+  push reg_a
+  cp [bp:3] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare
@@ -505,8 +553,10 @@ label true_13
   cp 0 [bp:-1]
 
 label while_15
-  push [bp:-1]
-  push [bp:2]
+  cp [bp:-1] reg_a
+  push reg_a
+  cp [bp:2] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare
@@ -553,8 +603,10 @@ label true_15
   call vram_set_buf
   add_sp 4
   _cmt ★~vram_set_buf~から戻った直後
-  push [bp:-1]
-  push 1
+  cp [bp:-1] reg_a
+  push reg_a
+  cp 1 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -562,8 +614,10 @@ label true_15
   jump while_15
 label end_while_15
 
-  push [bp:-2]
-  push 1
+  cp [bp:-2] reg_a
+  push reg_a
+  cp 1 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -587,8 +641,10 @@ label replace_with_buf
   sub_sp 1
 
 label while_17
-  push [bp:-1]
-  push 25
+  cp [bp:-1] reg_a
+  push reg_a
+  cp 25 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare
@@ -603,8 +659,10 @@ label end_neq_18
   jump_eq true_17
   jump end_while_17
 label true_17
-  push [bp:-1]
-  push 25
+  cp [bp:-1] reg_a
+  push reg_a
+  cp 25 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -612,8 +670,10 @@ label true_17
   get_vram [bp:-2] reg_a
   cp reg_a [bp:-3]
   set_vram [bp:-1] [bp:-3]
-  push [bp:-1]
-  push 1
+  cp [bp:-1] reg_a
+  push reg_a
+  cp 1 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
@@ -676,8 +736,10 @@ label main
   cp 1 [bp:-4]
 
 label while_19
-  push [bp:-4]
-  push [bp:-3]
+  cp [bp:-4] reg_a
+  push reg_a
+  cp [bp:-3] reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare
@@ -700,8 +762,10 @@ label true_19
   _cmt call~~replace_with_buf
   call replace_with_buf
   add_sp 0
-  push [bp:-4]
-  push 1
+  cp [bp:-4] reg_a
+  push reg_a
+  cp 1 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab

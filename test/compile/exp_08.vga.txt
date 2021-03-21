@@ -10,8 +10,10 @@ label main
   cp 0 [bp:-1]
 
 label while_1
-  push [bp:-1]
-  push 0
+  cp [bp:-1] reg_a
+  push reg_a
+  cp 0 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   compare

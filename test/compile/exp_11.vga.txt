@@ -7,13 +7,16 @@ label main
 
   # 関数の処理本体
   sub_sp 1
-  push 1
-  push 2
+  cp 1 reg_a
+  push reg_a
+  cp 2 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab
   push reg_a
-  push 3
+  cp 3 reg_a
+  push reg_a
   pop reg_b
   pop reg_a
   add_ab

@@ -29,26 +29,23 @@ toLvarRef(lvarNames, lvarName) {
 }
 
 _genExpr_push(fnArgNames, lvarNames, val) {
-  var pushArg;
-
   if (val is int) {
-    pushArg = val;
+    print("  cp ${val} reg_a");
   } else if (val is String) {
     if (fnArgNames.contains(val)) {
-      pushArg = toFnArgRef(fnArgNames, val);
+      final cpSrc = toFnArgRef(fnArgNames, val);
+      print("  cp ${cpSrc} reg_a");
     } else if (lvarNames.contains(val)) {
-      pushArg = toLvarRef(lvarNames, val);
+      final cpSrc = toLvarRef(lvarNames, val);
+      print("  cp ${cpSrc} reg_a");
     } else {
       throw notYetImpl([ val ]);
     }
   } else if (val is List) {
     _genExpr_binary(fnArgNames, lvarNames, val);
-    pushArg = "reg_a";
   } else {
     throw notYetImpl([ val ]);
   }
-
-  print("  push ${pushArg}");
 }
 
 _genExpr_add() {
@@ -119,7 +116,9 @@ _genExpr_binary(fnArgNames, lvarNames, exp) {
   final argR = args[1];
 
   _genExpr_push(fnArgNames, lvarNames, argL);
+  print("  push reg_a");
   _genExpr_push(fnArgNames, lvarNames, argR);
+  print("  push reg_a");
 
   if (op == "+") {
     _genExpr_add();

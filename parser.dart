@@ -47,8 +47,8 @@ toTokens(src) {
 var tokens;
 var pos = 0;
 
-Token peek() {
-  return tokens[pos];
+Token peek([offset = 0]) {
+  return tokens[pos + offset];
 }
 
 void dumpState() {
@@ -186,7 +186,7 @@ List _parseVar_init() {
 List parseVar() {
   consume("var");
 
-  final t = tokens[pos + 1];
+  final t = peek(1);
 
   if (t.value == ";") {
     return _parseVar_declare();

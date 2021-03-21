@@ -153,7 +153,19 @@ List parseFunc() {
   consume(")");
 
   consume("{");
-  final stmts = parseStmts();
+
+  final stmts = [];
+  while (true) {
+    var t = peek();
+    if (t.value == "}") { break; }
+
+    if (t.value == "var") {
+      stmts.add(parseVar());
+    } else {
+      stmts.add(parseStmt());
+    }
+  }
+
   consume("}");
 
   return ["func", funcName, args, stmts];
@@ -398,7 +410,6 @@ List? parseStmt() {
   }
 
   if      (t.value == "func"    ) { return parseFunc();      } 
-  else if (t.value == "var"     ) { return parseVar();       }
   else if (t.value == "set"     ) { return parseSet();       }
   else if (t.value == "call"    ) { return parseCall();      }
   else if (t.value == "call_set") { return parseCallSet();   }

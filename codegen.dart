@@ -171,9 +171,9 @@ genCall(fnArgNames, lvarNames, stmtRest) {
 
 genCallSet(fnArgNames, lvarNames, stmtRest) {
   final lvarName = stmtRest[0];
-  final fnTemp = stmtRest[1];
+  final funcall = stmtRest[1];
 
-  genCall(fnArgNames, lvarNames, fnTemp);
+  genCall(fnArgNames, lvarNames, funcall);
 
   final lvarRef = toLvarRef(lvarNames, lvarName);
   print("  cp reg_a ${lvarRef}");

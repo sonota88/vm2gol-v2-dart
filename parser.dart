@@ -310,19 +310,17 @@ List parseCallSet() {
 
   consume("=");
 
-  final expr = parseFuncall();
+  final funcall = parseFuncall();
 
   consume(";");
 
-  return ["call_set", varName, expr];
+  return ["call_set", varName, funcall];
 }
 
 List parseReturn() {
   consume("return");
 
-  Token t = peek();
-
-  if (t.value == ";") {
+  if (peek().value == ";") {
     consume(";");
     return ["return"];
   } else {

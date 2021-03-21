@@ -402,12 +402,8 @@ List parseVmComment() {
   return ["_cmt", comment];
 }
 
-List? parseStmt() {
+List parseStmt() {
   final t = peek();
-
-  if (t.value == "}") {
-    return null;
-  }
 
   if      (t.value == "set"     ) { return parseSet();       }
   else if (t.value == "call"    ) { return parseCall();      }
@@ -425,14 +421,11 @@ List parseStmts() {
   var stmts = [];
 
   while(true) {
-    if (isEnd()) {
+    if (peek().value == "}") {
       break;
     }
 
     final stmt = parseStmt();
-    if (stmt == null) {
-      break;
-    }
 
     stmts.add(stmt);
   }

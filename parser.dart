@@ -462,7 +462,7 @@ List parseTopStmts() {
 }
 
 List parse(){
-  final stmts = parseStmts();
+  final stmts = parseTopStmts();
   return ["stmts", ...stmts];
 }
 

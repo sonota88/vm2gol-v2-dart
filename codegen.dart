@@ -16,6 +16,18 @@ List getRest(List xs) {
 
 // --------------------------------
 
+asmPrologue() {
+  print("  push bp");
+  print("  cp sp bp");
+}
+
+asmEpilogue() {
+  print("  cp bp sp");
+  print("  pop bp");
+}
+
+// --------------------------------
+
 var globalLabelId = 0;
 
 toFnArgRef(fnArgNames, fnArgName) {
@@ -353,8 +365,7 @@ genFuncDef(rest) {
 
   print("");
   print("label " + fnName);
-  print("  push bp");
-  print("  cp sp bp");
+  asmPrologue();
 
   print("");
   print("  # 関数の処理本体");
@@ -372,8 +383,7 @@ genFuncDef(rest) {
   });
 
   print("");
-  print("  cp bp sp");
-  print("  pop bp");
+  asmEpilogue();
   print("  ret");
 }
 

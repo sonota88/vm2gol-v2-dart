@@ -40,14 +40,18 @@ lvarDisp(lvarNames, lvarName) {
   return -(i + 1);
 }
 
+indirection(base, disp) {
+  return "[${base}:${disp}]";
+}
+
 toFnArgRef(fnArgNames, fnArgName) {
   final disp = fnArgDisp(fnArgNames, fnArgName);
-  return "[bp:${disp}]";
+  return indirection("bp", disp);
 }
 
 toLvarRef(lvarNames, lvarName) {
   final disp = lvarDisp(lvarNames, lvarName);
-  return "[bp:${disp}]";
+  return indirection("bp", disp);
 }
 
 _genExpr_add() {

@@ -88,9 +88,9 @@ _genExpr_neq() {
   print("label ${labelEnd}");
 }
 
-_genExpr_binary(fnArgNames, lvarNames, exp) {
-  final op = exp[0];
-  final args = getRest(exp);
+_genExpr_binary(fnArgNames, lvarNames, expr) {
+  final op = expr[0];
+  final args = getRest(expr);
 
   final argL = args[0];
   final argR = args[1];
@@ -229,9 +229,9 @@ _genSet_set(lvarNames, srcVal, dest) {
 
 genSet(fnArgNames, lvarNames, rest) {
   final dest = rest[0];
-  final exp = rest[1];
+  final expr = rest[1];
 
-  genExpr(fnArgNames, lvarNames, exp);
+  genExpr(fnArgNames, lvarNames, expr);
 
   _genSet_set(lvarNames, "reg_a", dest);
 }

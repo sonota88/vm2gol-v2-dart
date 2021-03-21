@@ -441,6 +441,26 @@ List parseStmts() {
   return stmts;
 }
 
+List parseTopStmt() {
+  final t = peek();
+
+  if (t.value == "func") {
+    return parseFunc();
+  } else {
+    throw notYetImpl([ t ]);
+  }
+}
+
+List parseTopStmts() {
+  final topStmts = [];
+
+  while (! isEnd()) {
+    topStmts.add(parseTopStmt());
+  }
+
+  return topStmts;
+}
+
 List parse(){
   final stmts = parseStmts();
   return ["stmts", ...stmts];

@@ -320,25 +320,18 @@ genStmt(fnArgNames, lvarNames, stmt) {
 
   if (stmtHead == "call") {
     genCall(fnArgNames, lvarNames, stmtRest);
-
   } else if (stmtHead == "call_set") {
     genCallSet(fnArgNames, lvarNames, stmtRest);
-
   } else if (stmtHead == "set") {
     genSet(fnArgNames, lvarNames, stmtRest);
-
   } else if (stmtHead == "return") {
     genReturn(lvarNames, stmtRest);
-
   } else if (stmtHead == "while") {
     genWhile(fnArgNames, lvarNames, stmtRest);
-
   } else if (stmtHead == "case") {
     genCase(fnArgNames, lvarNames, stmtRest);
-
   } else if (stmtHead == "_cmt") {
     genVmComment(stmtRest[0]);
-
   } else {
     throw notYetImpl([ stmtHead ]);
   }

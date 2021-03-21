@@ -134,7 +134,9 @@ _genExpr_binary(fnArgNames, lvarNames, exp) {
 }
 
 genExpr(fnArgNames, lvarNames, expr) {
-  if (expr is List) {
+  if (expr is int) {
+    print("  cp ${expr} reg_a");
+  } else if (expr is List) {
     _genExpr_binary(fnArgNames, lvarNames, expr);
   } else {
     throw notYetImpl([ expr ]);

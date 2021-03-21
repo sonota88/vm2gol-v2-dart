@@ -54,12 +54,12 @@ _genExpr_eq() {
   print("  jump_eq ${labelThen}");
 
   // else
-  print("  set_reg_a 0");
+  print("  cp 0 reg_a");
   print("  jump ${labelEnd}");
 
   // then
   print("label ${labelThen}");
-  print("  set_reg_a 1");
+  print("  cp 1 reg_a");
 
   print("label ${labelEnd}");
 }
@@ -78,12 +78,12 @@ _genExpr_neq() {
   print("  jump_eq ${labelThen}");
 
   // else
-  print("  set_reg_a 1");
+  print("  cp 1 reg_a");
   print("  jump ${labelEnd}");
 
   // then
   print("label ${labelThen}");
-  print("  set_reg_a 0");
+  print("  cp 0 reg_a");
 
   print("label ${labelEnd}");
 }
@@ -261,7 +261,7 @@ genWhile(fnArgNames, lvarNames, rest) {
   genExpr(fnArgNames, lvarNames, condExp);
 
   // 比較対象の値（真）をセット
-  print("  set_reg_b 1");
+  print("  cp 1 reg_b");
   print("  compare");
 
   // true の場合ループの本体を実行
@@ -304,7 +304,7 @@ genCase(fnArgNames, lvarNames, whenBlocks) {
 
         genExpr(fnArgNames, lvarNames, cond);
 
-        print("  set_reg_b 1");
+        print("  cp 1 reg_b");
 
         print("  compare");
         print("  jump_eq ${labelWhenHead}_${whenIdx}");

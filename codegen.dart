@@ -400,6 +400,15 @@ genTopStmts(rest) {
   });
 }
 
+genBuiltinSetVram() {
+  print("");
+  print("label set_vram");
+  asmPrologue();
+  print("  set_vram [bp:2] [bp:3]"); // vram_addr value
+  asmEpilogue();
+  print("  ret");
+}
+
 codegen(tree) {
   print("  call main");
   print("  exit");
@@ -408,6 +417,10 @@ codegen(tree) {
   final rest = getRest(tree);
 
   genTopStmts(rest);
+
+  print("#>builtins");
+  genBuiltinSetVram();
+  print("#<builtins");
 }
 
 main(){

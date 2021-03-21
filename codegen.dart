@@ -183,18 +183,14 @@ genCallSet(fnArgNames, lvarNames, stmtRest) {
   print("  cp reg_a ${lvarRef}");
 }
 
-_genSet_set(lvarNames, srcVal, dest) {
-    final lvarRef = indirection("bp", lvarDisp(lvarNames, dest));
-    print("  cp ${srcVal} ${lvarRef}");
-}
-
 genSet(fnArgNames, lvarNames, rest) {
   final dest = rest[0];
   final expr = rest[1];
 
   genExpr(fnArgNames, lvarNames, expr);
 
-  _genSet_set(lvarNames, "reg_a", dest);
+  final lvarRef = indirection("bp", lvarDisp(lvarNames, dest));
+  print("  cp reg_a ${lvarRef}");
 }
 
 genReturn(lvarNames, stmtRest) {

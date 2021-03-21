@@ -28,26 +28,6 @@ toLvarRef(lvarNames, lvarName) {
   return "[bp:-${ i + 1 }]";
 }
 
-_genExpr_push(fnArgNames, lvarNames, val) {
-  if (val is int) {
-    print("  cp ${val} reg_a");
-  } else if (val is String) {
-    if (fnArgNames.contains(val)) {
-      final cpSrc = toFnArgRef(fnArgNames, val);
-      print("  cp ${cpSrc} reg_a");
-    } else if (lvarNames.contains(val)) {
-      final cpSrc = toLvarRef(lvarNames, val);
-      print("  cp ${cpSrc} reg_a");
-    } else {
-      throw notYetImpl([ val ]);
-    }
-  } else if (val is List) {
-    _genExpr_binary(fnArgNames, lvarNames, val);
-  } else {
-    throw notYetImpl([ val ]);
-  }
-}
-
 _genExpr_add() {
   print("  pop reg_b");
   print("  pop reg_a");
@@ -115,9 +95,9 @@ _genExpr_binary(fnArgNames, lvarNames, exp) {
   final argL = args[0];
   final argR = args[1];
 
-  _genExpr_push(fnArgNames, lvarNames, argL);
+  genExpr(fnArgNames, lvarNames, argL);
   print("  push reg_a");
-  _genExpr_push(fnArgNames, lvarNames, argR);
+  genExpr(fnArgNames, lvarNames, argR);
   print("  push reg_a");
 
   if (op == "+") {

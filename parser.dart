@@ -425,9 +425,7 @@ List parseStmts() {
       break;
     }
 
-    final stmt = parseStmt();
-
-    stmts.add(stmt);
+    stmts.add(parseStmt());
   }
 
   return stmts;

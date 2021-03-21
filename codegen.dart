@@ -239,7 +239,7 @@ genWhile(fnArgNames, lvarNames, rest) {
   print("");
 }
 
-genCase(fnArgNames, lvarNames, whenBlocks) {
+genCase(fnArgNames, lvarNames, whenClauses) {
   globalLabelId++;
   final labelId = globalLabelId;
 
@@ -249,11 +249,11 @@ genCase(fnArgNames, lvarNames, whenBlocks) {
 
   var whenIdx = -1;
 
-  whenBlocks.forEach((whenBlock){
+  whenClauses.forEach((whenClause){
       whenIdx++;
 
-      final cond = whenBlock[0];
-      final rest = getRest(whenBlock);
+      final cond = whenClause[0];
+      final rest = getRest(whenClause);
 
       final condRest = getRest(cond);
 

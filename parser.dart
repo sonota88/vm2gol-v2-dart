@@ -28,13 +28,7 @@ toTokens(src) {
 
     final String type = m.group(1)!;
 
-    final String g2 = m.group(2)!;
-    var value;
-    if (type == "int") {
-      value = int.parse(g2);
-    } else {
-      value = g2;
-    }
+    final String value = m.group(2)!;
 
     tokens.add(new Token(type, value));
   }
@@ -90,12 +84,12 @@ bool isEnd() {
 _parseArg() {
   final t = peek();
 
-  if (
-    t.type == "ident" ||
-    t.type == "int"
-  ) {
+  if (t.type == "ident") {
     pos++;
     return t.value;
+  } else if (t.type == "int") {
+    pos++;
+    return t.getValueAsInt();
   } else {
     throw parseError();
   }
@@ -254,10 +248,12 @@ parseExpr() {
     return _parseExprRight(exprL);
   }
 
-  if (
-    tLeft.type == "int" ||
-    tLeft.type == "ident"
-  ) {
+  if (tLeft.type == "int") {
+    pos++;
+
+    final exprL = tLeft.getValueAsInt();
+    return _parseExprRight(exprL);
+  } else if (tLeft.type == "ident") {
     pos++;
 
     final exprL = tLeft.value;

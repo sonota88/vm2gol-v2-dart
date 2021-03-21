@@ -258,7 +258,7 @@ genWhile(fnArgNames, lvarNames, rest) {
   print("label ${labelBegin}");
 
   // 条件の評価
-  _genExpr_binary(fnArgNames, lvarNames, condExp);
+  genExpr(fnArgNames, lvarNames, condExp);
 
   // 比較対象の値（真）をセット
   print("  set_reg_b 1");
@@ -304,7 +304,7 @@ genCase(fnArgNames, lvarNames, whenBlocks) {
       print("  # 条件 ${labelId}_${whenIdx}: ${inspect(cond)}");
 
       if (condHead == "eq") {
-        _genExpr_binary(fnArgNames, lvarNames, cond);
+        genExpr(fnArgNames, lvarNames, cond);
 
         print("  set_reg_b 1");
 

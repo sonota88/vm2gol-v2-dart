@@ -409,8 +409,7 @@ List? parseStmt() {
     return null;
   }
 
-  if      (t.value == "func"    ) { return parseFunc();      } 
-  else if (t.value == "set"     ) { return parseSet();       }
+  if      (t.value == "set"     ) { return parseSet();       }
   else if (t.value == "call"    ) { return parseCall();      }
   else if (t.value == "call_set") { return parseCallSet();   }
   else if (t.value == "return"  ) { return parseReturn();    }

@@ -42,7 +42,7 @@ _genExpr_push(fnArgNames, lvarNames, val) {
       throw notYetImpl([ val ]);
     }
   } else if (val is List) {
-    genExpr(fnArgNames, lvarNames, val);
+    _genExpr_binary(fnArgNames, lvarNames, val);
     pushArg = "reg_a";
   } else {
     throw notYetImpl([ val ]);
@@ -111,7 +111,7 @@ _genExpr_neq() {
   print("label ${labelEnd}");
 }
 
-genExpr(fnArgNames, lvarNames, exp) {
+_genExpr_binary(fnArgNames, lvarNames, exp) {
   final op = exp[0];
   final args = getRest(exp);
 
@@ -269,7 +269,7 @@ genSet(fnArgNames, lvarNames, rest) {
       throw notYetImpl([ exp ]);
     }
   } else if (exp is List) {
-    genExpr(fnArgNames, lvarNames, exp);
+    _genExpr_binary(fnArgNames, lvarNames, exp);
     srcVal = "reg_a";
   } else {
     throw notYetImpl([ exp ]);
@@ -324,7 +324,7 @@ genWhile(fnArgNames, lvarNames, rest) {
   print("label ${labelBegin}");
 
   // 条件の評価
-  genExpr(fnArgNames, lvarNames, condExp);
+  _genExpr_binary(fnArgNames, lvarNames, condExp);
 
   // 比較対象の値（真）をセット
   print("  set_reg_b 1");
@@ -370,7 +370,7 @@ genCase(fnArgNames, lvarNames, whenBlocks) {
       print("  # 条件 ${labelId}_${whenIdx}: ${inspect(cond)}");
 
       if (condHead == "eq") {
-        genExpr(fnArgNames, lvarNames, cond);
+        _genExpr_binary(fnArgNames, lvarNames, cond);
 
         print("  set_reg_b 1");
 

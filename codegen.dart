@@ -30,14 +30,24 @@ asmEpilogue() {
 
 var globalLabelId = 0;
 
-toFnArgRef(fnArgNames, fnArgName) {
+fnArgDisp(fnArgNames, fnArgName) {
   final i = fnArgNames.indexOf(fnArgName);
-  return "[bp:${ i + 2 }]";
+  return i + 2;
+}
+
+lvarDisp(lvarNames, lvarName) {
+  final i = lvarNames.indexOf(lvarName);
+  return -(i + 1);
+}
+
+toFnArgRef(fnArgNames, fnArgName) {
+  final disp = fnArgDisp(fnArgNames, fnArgName);
+  return "[bp:${disp}]";
 }
 
 toLvarRef(lvarNames, lvarName) {
-  final i = lvarNames.indexOf(lvarName);
-  return "[bp:-${ i + 1 }]";
+  final disp = lvarDisp(lvarNames, lvarName);
+  return "[bp:${disp}]";
 }
 
 _genExpr_add() {

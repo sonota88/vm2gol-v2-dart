@@ -52,7 +52,12 @@ label vram_set
   add_sp 4
   cp reg_a [bp:-1]
   cp [bp:5] reg_a
-  set_vram [bp:-1] reg_a
+  push reg_a
+  cp [bp:-1] reg_a
+  push reg_a
+  _cmt call~~set_vram
+  call set_vram
+  add_sp 2
 
   cp bp sp
   pop bp
@@ -77,7 +82,12 @@ label vram_set_buf
   add_sp 4
   cp reg_a [bp:-1]
   cp [bp:5] reg_a
-  set_vram [bp:-1] reg_a
+  push reg_a
+  cp [bp:-1] reg_a
+  push reg_a
+  _cmt call~~set_vram
+  call set_vram
+  add_sp 2
 
   cp bp sp
   pop bp
@@ -88,6 +98,7 @@ label vram_get
   cp sp bp
 
   # 関数の処理本体
+  sub_sp 1
   sub_sp 1
   cp 0 reg_a
   push reg_a
@@ -101,7 +112,13 @@ label vram_get
   call to_vi
   add_sp 4
   cp reg_a [bp:-1]
-  get_vram [bp:-1] reg_a
+  cp [bp:-1] reg_a
+  push reg_a
+  _cmt call~~get_vram
+  call get_vram
+  add_sp 1
+  cp reg_a [bp:-2]
+  cp [bp:-2] reg_a
 
   cp bp sp
   pop bp
@@ -737,10 +754,19 @@ label true_17
   pop reg_a
   add_ab
   cp reg_a [bp:-2]
-  get_vram [bp:-2] reg_a
+  cp [bp:-2] reg_a
+  push reg_a
+  _cmt call~~get_vram
+  call get_vram
+  add_sp 1
   cp reg_a [bp:-3]
   cp [bp:-3] reg_a
-  set_vram [bp:-1] reg_a
+  push reg_a
+  cp [bp:-1] reg_a
+  push reg_a
+  _cmt call~~set_vram
+  call set_vram
+  add_sp 2
   cp [bp:-1] reg_a
   push reg_a
   cp 1 reg_a
@@ -874,3 +900,19 @@ label end_while_19
   cp bp sp
   pop bp
   ret
+#>builtins
+
+label set_vram
+  push bp
+  cp sp bp
+  set_vram [bp:2] [bp:3]
+  cp bp sp
+  pop bp
+
+label get_vram
+  push bp
+  cp sp bp
+  get_vram [bp:2] reg_a
+  cp bp sp
+  pop bp
+#<builtins

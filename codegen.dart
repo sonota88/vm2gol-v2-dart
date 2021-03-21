@@ -259,21 +259,21 @@ genCase(fnArgNames, lvarNames, whenClauses) {
 
       print("  # 条件 ${labelId}_${whenIdx}: ${inspect(cond)}");
 
-        genExpr(fnArgNames, lvarNames, cond);
+      genExpr(fnArgNames, lvarNames, cond);
 
-        print("  cp 1 reg_b");
+      print("  cp 1 reg_b");
 
-        print("  compare");
-        print("  jump_eq ${labelWhenHead}_${whenIdx}");
-        print("  jump ${labelEndWhenHead}_${whenIdx}");
+      print("  compare");
+      print("  jump_eq ${labelWhenHead}_${whenIdx}");
+      print("  jump ${labelEndWhenHead}_${whenIdx}");
 
-        print("label ${labelWhenHead}_${whenIdx}");
+      print("label ${labelWhenHead}_${whenIdx}");
 
-        genStmts(fnArgNames, lvarNames, rest);
+      genStmts(fnArgNames, lvarNames, rest);
 
-        print("  jump ${labelEnd}");
+      print("  jump ${labelEnd}");
 
-        print("label ${labelEndWhenHead}_${whenIdx}");
+      print("label ${labelEndWhenHead}_${whenIdx}");
   });
 
   print("label end_case_${labelId}");

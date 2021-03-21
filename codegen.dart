@@ -238,31 +238,7 @@ genSet(fnArgNames, lvarNames, rest) {
 
 genReturn(lvarNames, stmtRest) {
   final retval = stmtRest[0];
-
-  if (retval is int) {
-    print("  cp ${retval} reg_a");
-  } else if (retval is String) {
-
-    if (_matchVramRef_ident(retval) != null) {
-      final varName = _matchVramRef_ident(retval);
-
-      if (lvarNames.contains(varName)) {
-        final ref = toLvarRef(lvarNames, varName);
-        print("  get_vram ${ref} reg_a");
-      } else {
-        throw notYetImpl([ retval ]);
-      }
-
-    } else if (lvarNames.contains(retval)) {
-      final lvarRef = toLvarRef(lvarNames, retval);
-      print("  cp ${lvarRef} reg_a");
-    } else {
-      throw notYetImpl([ retval ]);
-    }
-
-  } else {
-    throw notYetImpl([ retval ]);
-  }
+  genExpr([], lvarNames, retval);
 }
 
 genWhile(fnArgNames, lvarNames, rest) {

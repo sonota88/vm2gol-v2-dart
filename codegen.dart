@@ -123,6 +123,14 @@ genExpr(fnArgNames, lvarNames, expr) {
     } else if (lvarNames.contains(expr)) {
       final cpSrc = toLvarRef(lvarNames, expr);
       print("  cp ${cpSrc} reg_a");
+    } else if (_matchVramRef_ident(expr) != null) {
+      final varName = _matchVramRef_ident(expr);
+      if (lvarNames.contains(varName)) {
+        final vramAddr = toLvarRef(lvarNames, varName);
+        print("  get_vram ${vramAddr} reg_a");
+      } else {
+        throw notYetImpl([ varName ]);
+      }
     } else {
       throw notYetImpl([ expr ]);
     }

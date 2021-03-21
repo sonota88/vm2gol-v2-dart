@@ -7,7 +7,8 @@ label main
 
   # 関数の処理本体
   sub_sp 1
-  cp 0 [bp:-1]
+  cp 0 reg_a
+  cp reg_a [bp:-1]
   # 条件 1_0: ["eq", "a", 1]
   cp [bp:-1] reg_a
   push reg_a
@@ -27,7 +28,8 @@ label end_eq_2
   jump_eq when_1_0
   jump end_when_1_0
 label when_1_0
-  cp 0 [bp:-1]
+  cp 0 reg_a
+  cp reg_a [bp:-1]
   jump end_case_1
 label end_when_1_0
   # 条件 1_1: ["eq", "a", 0]
@@ -49,7 +51,8 @@ label end_eq_3
   jump_eq when_1_1
   jump end_when_1_1
 label when_1_1
-  cp 1 [bp:-1]
+  cp 1 reg_a
+  cp reg_a [bp:-1]
   jump end_case_1
 label end_when_1_1
 label end_case_1

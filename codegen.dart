@@ -231,40 +231,9 @@ genSet(fnArgNames, lvarNames, rest) {
   final dest = rest[0];
   final exp = rest[1];
 
-  var srcVal;
-  if (exp is int) {
-    srcVal = exp;
-  } else if (exp is String) {
-    if (fnArgNames.contains(exp)) {
-      srcVal = toFnArgRef(fnArgNames, exp);
-    } else if (lvarNames.contains(exp)) {
-      srcVal = toLvarRef(lvarNames, exp);
-    } else if ( _matchVramRef_index(exp) != null ) {
-      final vramAddr = _matchVramRef_index(exp);
-      print("  get_vram ${vramAddr} reg_a");
-      srcVal = "reg_a";
-    } else if ( _matchVramRef_ident(exp) != null ) {
-      final varName = _matchVramRef_ident(exp);
-      
-      if (lvarNames.contains(varName)) {
-        final ref = toLvarRef(lvarNames, varName);
-        print("  get_vram ${ref} reg_a");
-      } else {
-        throw notYetImpl([ varName ]);
-      }
-      srcVal = "reg_a";
+  genExpr(fnArgNames, lvarNames, exp);
 
-    } else {
-      throw notYetImpl([ exp ]);
-    }
-  } else if (exp is List) {
-    _genExpr_binary(fnArgNames, lvarNames, exp);
-    srcVal = "reg_a";
-  } else {
-    throw notYetImpl([ exp ]);
-  }
-
-  _genSet_set(lvarNames, srcVal, dest);
+  _genSet_set(lvarNames, "reg_a", dest);
 }
 
 genReturn(lvarNames, stmtRest) {

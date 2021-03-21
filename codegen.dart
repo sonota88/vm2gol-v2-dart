@@ -179,8 +179,8 @@ genCallSet(fnArgNames, lvarNames, stmtRest) {
 
   genCall(fnArgNames, lvarNames, funcall);
 
-  final lvarRef = indirection("bp", lvarDisp(lvarNames, lvarName));
-  print("  cp reg_a ${lvarRef}");
+  final cpDest = indirection("bp", lvarDisp(lvarNames, lvarName));
+  print("  cp reg_a ${cpDest}");
 }
 
 genSet(fnArgNames, lvarNames, rest) {
@@ -189,8 +189,8 @@ genSet(fnArgNames, lvarNames, rest) {
 
   genExpr(fnArgNames, lvarNames, expr);
 
-  final lvarRef = indirection("bp", lvarDisp(lvarNames, dest));
-  print("  cp reg_a ${lvarRef}");
+  final cpDest = indirection("bp", lvarDisp(lvarNames, dest));
+  print("  cp reg_a ${cpDest}");
 }
 
 genReturn(lvarNames, stmtRest) {

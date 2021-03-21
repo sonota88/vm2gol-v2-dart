@@ -298,12 +298,10 @@ genCase(fnArgNames, lvarNames, whenBlocks) {
       final cond = whenBlock[0];
       final rest = getRest(whenBlock);
 
-      final condHead = cond[0];
       final condRest = getRest(cond);
 
       print("  # 条件 ${labelId}_${whenIdx}: ${inspect(cond)}");
 
-      if (condHead == "eq") {
         genExpr(fnArgNames, lvarNames, cond);
 
         print("  set_reg_b 1");
@@ -319,10 +317,6 @@ genCase(fnArgNames, lvarNames, whenBlocks) {
         print("  jump ${labelEnd}");
 
         print("label ${labelEndWhenHead}_${whenIdx}");
-
-      } else {
-        throw notYetImpl([ condHead ]);
-      }
   });
 
   print("label end_case_${labelId}");

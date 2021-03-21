@@ -44,16 +44,6 @@ indirection(base, disp) {
   return "[${base}:${disp}]";
 }
 
-toFnArgRef(fnArgNames, fnArgName) {
-  final disp = fnArgDisp(fnArgNames, fnArgName);
-  return indirection("bp", disp);
-}
-
-toLvarRef(lvarNames, lvarName) {
-  final disp = lvarDisp(lvarNames, lvarName);
-  return indirection("bp", disp);
-}
-
 _genExpr_add() {
   print("  pop reg_b");
   print("  pop reg_a");
@@ -144,10 +134,10 @@ genExpr(fnArgNames, lvarNames, expr) {
     print("  cp ${expr} reg_a");
   } else if (expr is String) {
     if (fnArgNames.contains(expr)) {
-      final cpSrc = toFnArgRef(fnArgNames, expr);
+      final cpSrc = indirection("bp", fnArgDisp(fnArgNames, expr));
       print("  cp ${cpSrc} reg_a");
     } else if (lvarNames.contains(expr)) {
-      final cpSrc = toLvarRef(lvarNames, expr);
+      final cpSrc = indirection("bp", lvarDisp(lvarNames, expr));
       print("  cp ${cpSrc} reg_a");
     } else {
       throw notYetImpl([ expr ]);
@@ -189,12 +179,12 @@ genCallSet(fnArgNames, lvarNames, stmtRest) {
 
   genCall(fnArgNames, lvarNames, funcall);
 
-  final lvarRef = toLvarRef(lvarNames, lvarName);
+  final lvarRef = indirection("bp", lvarDisp(lvarNames, lvarName));
   print("  cp reg_a ${lvarRef}");
 }
 
 _genSet_set(lvarNames, srcVal, dest) {
-    final lvarRef = toLvarRef(lvarNames, dest);
+    final lvarRef = indirection("bp", lvarDisp(lvarNames, dest));
     print("  cp ${srcVal} ${lvarRef}");
 }
 

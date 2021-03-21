@@ -169,19 +169,7 @@ genCallSet(fnArgNames, lvarNames, stmtRest) {
   final lvarName = stmtRest[0];
   final fnTemp = stmtRest[1];
 
-  final fnName = fnTemp[0];
-  final fnArgs = getRest(fnTemp);
-
-  fnArgs.reversed.forEach((fnArg){
-      genExpr(
-        fnArgNames, lvarNames, fnArg
-      );
-      print("  push reg_a");
-  });
-
-  genVmComment("call_set  ${fnName}");
-  print("  call ${fnName}");
-  print("  add_sp ${fnArgs.length}");
+  genCall(fnArgNames, lvarNames, fnTemp);
 
   final lvarRef = toLvarRef(lvarNames, lvarName);
   print("  cp reg_a ${lvarRef}");

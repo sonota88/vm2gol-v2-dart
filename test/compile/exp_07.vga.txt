@@ -31,7 +31,7 @@ label main
   push reg_a
   cp 1 reg_a
   push reg_a
-  _cmt call_set~~add
+  _cmt call~~add
   call add
   add_sp 2
   cp reg_a [bp:-1]

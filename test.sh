@@ -18,6 +18,12 @@ ERRS=""
 DART_CMD="docker run --rm -i -v ${PROJECT_DIR}:/root/work my:dart dart"
 # $DART_CMD --version
 
+build() {
+  for name in lexer parser codegen; do
+    $DART_CMD compile exe ${name}.dart -o exe/${name}
+  done
+}
+
 test_nn() {
   local nn="$1"; shift
 
@@ -29,19 +35,19 @@ test_nn() {
 
   local exp_vga_file="${TEST_DIR}/compile/exp_${nn}.vga.txt"
 
-  cat ${TEST_DIR}/compile/${nn}.vg.txt | $DART_CMD lexer.dart > $temp_tokens_file
+  cat ${TEST_DIR}/compile/${nn}.vg.txt | exe/lexer > $temp_tokens_file
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_lex"
     return
   fi
 
-  cat $temp_tokens_file | $DART_CMD parser.dart > $temp_vgt_file
+  cat $temp_tokens_file | exe/parser > $temp_vgt_file
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_parse"
     return
   fi
 
-  cat $temp_vgt_file | $DART_CMD codegen.dart > $temp_vga_file
+  cat $temp_vgt_file | exe/codegen > $temp_vga_file
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_codegen"
     return
@@ -112,7 +118,10 @@ test_all() {
 }
 # --------------------------------
 
+mkdir -p exe
 mkdir -p z_tmp
+
+build
 
 cmd="$1"; shift
 case $cmd in

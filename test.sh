@@ -14,6 +14,10 @@ export TEMP_DIR="${PROJECT_DIR}/z_tmp"
 
 ERRS=""
 
+# DART_CMD=dart
+DART_CMD="docker run --rm -i -v ${PROJECT_DIR}:/root/work my:dart dart"
+# $DART_CMD --version
+
 test_nn() {
   local nn="$1"; shift
 
@@ -25,19 +29,19 @@ test_nn() {
 
   local exp_vga_file="${TEST_DIR}/compile/exp_${nn}.vga.txt"
 
-  cat ${TEST_DIR}/compile/${nn}.vg.txt | dart lexer.dart > $temp_tokens_file
+  cat ${TEST_DIR}/compile/${nn}.vg.txt | $DART_CMD lexer.dart > $temp_tokens_file
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_lex"
     return
   fi
 
-  cat $temp_tokens_file | dart parser.dart > $temp_vgt_file
+  cat $temp_tokens_file | $DART_CMD parser.dart > $temp_vgt_file
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_parse"
     return
   fi
 
-  cat $temp_vgt_file | dart codegen.dart > $temp_vga_file
+  cat $temp_vgt_file | $DART_CMD codegen.dart > $temp_vga_file
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_codegen"
     return
